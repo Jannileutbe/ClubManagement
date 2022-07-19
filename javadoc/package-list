@@ -1,0 +1,11 @@
+consoleinoutput.inputoutput
+consoleinoutput.mybufferedreader
+exceptions
+importAndExport
+vereinsverwaltung
+vereinsverwaltung.bankverbindung
+vereinsverwaltung.mitglied
+vereinsverwaltung.mitglied.ValueObjects
+vereinsverwaltung.verein
+vereinsverwaltung.vereineSortieren
+vereinsverwaltung.vorstand
