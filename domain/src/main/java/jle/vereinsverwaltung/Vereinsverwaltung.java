@@ -58,15 +58,24 @@ public class Vereinsverwaltung {
   private static final int SIX = 6;
   private static final int SEVEN = 7;
 
-  private VereinsService vereinsService;
-  private LinkedList<Verein> vereinsListe;
-  private final ResourceBundle germanBundle = ResourceBundle.getBundle("Messages", new Locale("de"));
-  private final ResourceBundle englishBundle = ResourceBundle.getBundle("Messages", new Locale("en"));
+  //<editor-fold desc="Message Properties because Checkstyle">
+
+  private final String messages = "Messages";
+  private final String faultyEntry = "faultyEntry";
+  private final String notANumberException = "notANumberException";
+
+
+  //</editor-fold>
+
+  private final VereinsService vereinsService;
+  private final LinkedList<Verein> vereinsListe;
+  private final ResourceBundle germanBundle = ResourceBundle.getBundle(messages, new Locale("de"));
+  private final ResourceBundle englishBundle = ResourceBundle.getBundle(messages, new Locale("en"));
   private ResourceBundle selectedBundle;
 
 
   public Vereinsverwaltung() {
-    this.vereinsListe = new LinkedList<Verein>();
+    this.vereinsListe = new LinkedList<>();
     this.vereinsService = new VereinsService();
     this.selectedBundle = germanBundle;
   }
@@ -93,9 +102,11 @@ public class Vereinsverwaltung {
   public void vereinsListeBearbeiten() throws ClubAlreadyExistsException {
     MyBufferedReader.print(selectedBundle.getString("addOrEditClubOptions"));
     int eingabe = MyBufferedReader.forceReadInInt();
+    String noClubExistsException = "noClubExistsException";
     switch (eingabe) {
       case 1:
-        Verein neuerVerein = vereinsService.createVerein(selectedBundle.getString("clubNameRules"), selectedBundle.getString("clubDescriptionRules"));
+        Verein neuerVerein = vereinsService.createVerein(
+            selectedBundle.getString("clubNameRules"), selectedBundle.getString("clubDescriptionRules"));
         if (thisClubAlreadyExists(neuerVerein)) {
           throw new ClubAlreadyExistsException();
         } else {
@@ -104,21 +115,21 @@ public class Vereinsverwaltung {
         break;
       case 2:
         if (getVereinsListe().isEmpty()) {
-          MyBufferedReader.printError(selectedBundle.getString("noClubExistsException"));
+          MyBufferedReader.printError(selectedBundle.getString(noClubExistsException));
         } else {
           vereinBearbeiten();
         }
         break;
       case THREE:
         if (getVereinsListe().isEmpty()) {
-          MyBufferedReader.printError(selectedBundle.getString("noClubExistsException"));
+          MyBufferedReader.printError(selectedBundle.getString(noClubExistsException));
         } else {
           vereineAusgeben();
         }
         break;
       case FOUR:
         if (getVereinsListe().isEmpty()) {
-          MyBufferedReader.printError(selectedBundle.getString("noClubExistsException"));
+          MyBufferedReader.printError(selectedBundle.getString(noClubExistsException));
         } else {
           vereinEntfernen();
         }
@@ -133,7 +144,7 @@ public class Vereinsverwaltung {
         spracheWechseln();
         break;
       default:
-        MyBufferedReader.printError(selectedBundle.getString("faultyEntry"));
+        MyBufferedReader.printError(selectedBundle.getString(faultyEntry));
     }
     //vereinAnlegenOderBearbeiten();
   }
@@ -143,14 +154,12 @@ public class Vereinsverwaltung {
 
   // Die Methode prüft, ob es bereits einen Verein mit dem gleichen Namen gibt
   public boolean vereinSchonVorhanden(VereinsName vereinsName) {
-    boolean schonVorhanden = false;
-    for (int i = 0; i < vereinsListe.size(); i++) {
-      if (vereinsListe.get(i).getName().equals(vereinsName)) {
-        schonVorhanden = true;
-        break;
+    for (Verein verein : vereinsListe) {
+      if (verein.getName().equals(vereinsName)) {
+        return true;
       }
     }
-    return schonVorhanden;
+    return false;
   }
   //</editor-fold>
 
@@ -159,10 +168,10 @@ public class Vereinsverwaltung {
   // Bearbeitung eines Vereins
   private void vereinBearbeiten() {
     Verein ausgewaehlterVerein = vereinAuswaehlen();
-    MyBufferedReader.print(selectedBundle.getString("editClubOptions"));
+    String editClubOptions = "editClubOptions";
+    MyBufferedReader.print(selectedBundle.getString(editClubOptions));
     // Der Switch wird so lange durchlaufen wie der Programmteil nicht aktiv durch eine Eingabe verlassen wird
-    boolean ok = true;
-    while (ok) {
+    while (true) {
       int eingabe = MyBufferedReader.forceReadInInt();
       switch (eingabe) {
         case 1:
@@ -187,17 +196,16 @@ public class Vereinsverwaltung {
           vorstandsrollenAnzeigen(ausgewaehlterVerein);
           break;
         case SEVEN:
-          // Es wird zurück zur Startauswahl gewechselt
-          ok = false;
           return;
         default:
           MyBufferedReader.printInvalidInput();
+          break;
       }
       // Am Ende jedes Cases muss einmal Enter gedrückt werden, um zur Bearbeitungsübersicht zurückzugelangen
       MyBufferedReader.print(selectedBundle.getString("backToEditingView"));
       MyBufferedReader.readInString();
       MyBufferedReader.print(selectedBundle.getString("selectedClubPrefix") + ausgewaehlterVerein.getName());
-      MyBufferedReader.print(selectedBundle.getString("editClubOptions"));
+      MyBufferedReader.print(selectedBundle.getString(editClubOptions));
     }
   }
 
@@ -220,7 +228,7 @@ public class Vereinsverwaltung {
         userInput = MyBufferedReader.readInInt(vereinsListe.size());
         ok = true;
       } catch (NotANumberException e) {
-        MyBufferedReader.printError(selectedBundle.getString("notANumberException"));
+        MyBufferedReader.printError(selectedBundle.getString(notANumberException));
       } catch (NumberOutOfRangeException e) {
         System.err.println(selectedBundle.getString("numberOutOfRangeException"));
       }
@@ -261,7 +269,7 @@ public class Vereinsverwaltung {
         userInput = MyBufferedReader.readInInt(FOUR, selectedBundle.getString("editClubMemberListOptions"));
         ok = true;
       } catch (NotANumberException e) {
-        MyBufferedReader.printError("notANumberException");
+        MyBufferedReader.printError(notANumberException);
       } catch (NumberOutOfRangeException e) {
         MyBufferedReader.printError("numberOutOfRangeException");
       }
@@ -308,7 +316,7 @@ public class Vereinsverwaltung {
         }
         break;
       default:
-        MyBufferedReader.printError(selectedBundle.getString("faultyEntry"));
+        MyBufferedReader.printError(selectedBundle.getString(faultyEntry));
     }
   }
 
@@ -384,7 +392,7 @@ public class Vereinsverwaltung {
         userInput = MyBufferedReader.readInInt(ausgewaehlterVerein.getMitgliederliste().size(), selectedBundle.getString("chooseClubMember"));
         ok = true;
       } catch (NotANumberException e) {
-        System.err.println(selectedBundle.getString("notANumberException"));
+        System.err.println(selectedBundle.getString(notANumberException));
       } catch (NumberOutOfRangeException e) {
         System.err.println(selectedBundle.getString("numberOutOfRangeException"));
       }
@@ -487,7 +495,7 @@ public class Vereinsverwaltung {
         eineAdresseLoeschen(ausgewaehltesMitglied);
         break;
       default:
-        MyBufferedReader.printError(selectedBundle.getString("faultyEntry"));
+        MyBufferedReader.printError(selectedBundle.getString(faultyEntry));
         break;
     }
   }
@@ -512,7 +520,7 @@ public class Vereinsverwaltung {
           userInput = MyBufferedReader.readInInt(ausgewaehltesMitglied.getAdressen().size(), selectedBundle.getString("chooseClubMember"));
           break;
         } catch (NotANumberException e) {
-          System.err.println(selectedBundle.getString("notANumberException"));
+          System.err.println(selectedBundle.getString(notANumberException));
         } catch (NumberOutOfRangeException e) {
           System.err.println(selectedBundle.getString("numberOutOfRangeException"));
         }
@@ -536,7 +544,7 @@ public class Vereinsverwaltung {
         userInput = MyBufferedReader.readInInt(ausgewaehltesMitglied.getAdressen().size());
         ok = true;
       } catch (NotANumberException e) {
-        System.err.println(selectedBundle.getString("notANumberException"));
+        System.err.println(selectedBundle.getString(notANumberException));
       } catch (NumberOutOfRangeException e) {
         System.err.println(selectedBundle.getString("numberOutOfRangeException"));
       }
@@ -622,7 +630,7 @@ public class Vereinsverwaltung {
         eineTelefonnummerLoeschen(ausgewaehltesMitglied);
         break;
       default:
-        MyBufferedReader.printError(selectedBundle.getString("faultyEntry"));
+        MyBufferedReader.printError(selectedBundle.getString(faultyEntry));
         break;
     }
   }
@@ -648,7 +656,7 @@ public class Vereinsverwaltung {
           userInput = MyBufferedReader.readInInt(ausgewaehltesMitglied.getTelefonnummern().size());
           ok = true;
         } catch (NotANumberException e) {
-          MyBufferedReader.printError(selectedBundle.getString("notANumberException"));
+          MyBufferedReader.printError(selectedBundle.getString(notANumberException));
         } catch (NumberOutOfRangeException e) {
           MyBufferedReader.printError(selectedBundle.getString("numberOutOfRangeException"));
         }
@@ -674,7 +682,7 @@ public class Vereinsverwaltung {
         userInput = MyBufferedReader.readInInt(ausgewaehltesMitglied.getTelefonnummern().size() - 1);
         ok = true;
       } catch (NotANumberException e) {
-        MyBufferedReader.printError(selectedBundle.getString("notANumberException"));
+        MyBufferedReader.printError(selectedBundle.getString(notANumberException));
       } catch (NumberOutOfRangeException e) {
         MyBufferedReader.printError(selectedBundle.getString("numberOutOfRangeException"));
       }
@@ -721,7 +729,7 @@ public class Vereinsverwaltung {
           bankverbindungEntfernen();
           break;
         default:
-          MyBufferedReader.printError(selectedBundle.getString("faultyEntry"));
+          MyBufferedReader.printError(selectedBundle.getString(faultyEntry));
           break;
       }
     }
@@ -786,7 +794,7 @@ public class Vereinsverwaltung {
       case 0:
         break;
       default:
-        MyBufferedReader.printError(selectedBundle.getString("faultyEntry"));
+        MyBufferedReader.printError(selectedBundle.getString(faultyEntry));
     }
   }
 
@@ -803,7 +811,7 @@ public class Vereinsverwaltung {
         userInput = MyBufferedReader.readInInt(ausgewaehlterVerein.getBankverbindungen().size());
         ok = true;
       } catch (NotANumberException e) {
-        System.err.println(selectedBundle.getString("notANumberException"));
+        System.err.println(selectedBundle.getString(notANumberException));
       } catch (NumberOutOfRangeException e) {
         System.err.println(selectedBundle.getString("numberOutOfRangeException"));
       }
@@ -841,7 +849,7 @@ public class Vereinsverwaltung {
     if (vollstaendigOderKommissarisch.equalsIgnoreCase("v") || vollstaendigOderKommissarisch.equalsIgnoreCase("k")) {
       vorstandAuswaehlen(ausgewaehltesMitglied, vollstaendigOderKommissarisch.toLowerCase());
     } else {
-      MyBufferedReader.printError(selectedBundle.getString("faultyEntry"));
+      MyBufferedReader.printError(selectedBundle.getString(faultyEntry));
     }
 
   }
@@ -1001,7 +1009,7 @@ public class Vereinsverwaltung {
         userInput = MyBufferedReader.readInInt(getVereinsListe().size());
         ok = true;
       } catch (NotANumberException e) {
-        MyBufferedReader.printError(selectedBundle.getString("notANumberException"));
+        MyBufferedReader.printError(selectedBundle.getString(notANumberException));
       } catch (NumberOutOfRangeException e) {
         MyBufferedReader.printError(selectedBundle.getString("numberOutOfRangeException"));
       }
@@ -1060,7 +1068,7 @@ public class Vereinsverwaltung {
         MyBufferedReader.printError(selectedBundle.getString("chooseLanguageError"));
       }
     } catch (NotANumberException e) {
-      MyBufferedReader.printError(selectedBundle.getString("notANumberException"));
+      MyBufferedReader.printError(selectedBundle.getString(notANumberException));
     } catch (NumberOutOfRangeException e) {
       MyBufferedReader.printError(selectedBundle.getString("numberOutOfRangeException"));
     }

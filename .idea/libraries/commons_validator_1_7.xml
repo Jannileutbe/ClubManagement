@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="commons-validator-1.7">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../../../Program Files/Java/jdk1.8.0_261/jre/lib/ext/commons-validator-1.7.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
