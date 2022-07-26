@@ -1,5 +1,5 @@
 package jle.exceptions;
 
-public class InvalidBirthdayException extends RuntimeException{
+public class InvalidBirthdayException extends RuntimeException {
 
 }

@@ -5,11 +5,9 @@ import static jle.consoleinoutput.inputoutput.ConsoleColors.RED;
 import static jle.consoleinoutput.inputoutput.ConsoleColors.RESET;
 import static jle.consoleinoutput.inputoutput.ConsoleColors.YELLOW;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Locale;
@@ -24,29 +22,29 @@ import jle.exceptions.InvalidCityException;
 import jle.exceptions.InvalidIbanException;
 import jle.exceptions.InvalidPhonenumberException;
 import jle.exceptions.InvalidPostalCodeException;
-import jle.exceptions.NotANumberException;
+import jle.exceptions.NotaNumberException;
 import jle.exceptions.NumberOutOfRangeException;
 import jle.exceptions.PhoneNumberAlreadyExistsExeption;
-import jle.importAndExport.CSVService;
+import jle.importexport.CsvService;
 import jle.vereinsverwaltung.bankverbindung.Bankverbindung;
 import jle.vereinsverwaltung.bankverbindung.Iban;
 import jle.vereinsverwaltung.mitglied.Mitglied;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Adresse;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Geburtsdatum;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Mitgliedsnummer;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Nachname;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Telefonnummer;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Vorname;
-import jle.vereinsverwaltung.mitglied.ValueObjects.adresse.Adresszeile;
-import jle.vereinsverwaltung.mitglied.ValueObjects.adresse.Ort;
-import jle.vereinsverwaltung.mitglied.ValueObjects.adresse.Postleitzahl;
+import jle.vereinsverwaltung.mitglied.valueobjects.Adresse;
+import jle.vereinsverwaltung.mitglied.valueobjects.Geburtsdatum;
+import jle.vereinsverwaltung.mitglied.valueobjects.Mitgliedsnummer;
+import jle.vereinsverwaltung.mitglied.valueobjects.Nachname;
+import jle.vereinsverwaltung.mitglied.valueobjects.Telefonnummer;
+import jle.vereinsverwaltung.mitglied.valueobjects.Vorname;
+import jle.vereinsverwaltung.mitglied.valueobjects.adresse.Adresszeile;
+import jle.vereinsverwaltung.mitglied.valueobjects.adresse.Ort;
+import jle.vereinsverwaltung.mitglied.valueobjects.adresse.Postleitzahl;
 import jle.vereinsverwaltung.verein.Verein;
 import jle.vereinsverwaltung.verein.VereinsBeschreibung;
 import jle.vereinsverwaltung.verein.VereinsName;
 import jle.vereinsverwaltung.verein.VereinsParser;
 import jle.vereinsverwaltung.verein.VereinsService;
-import jle.vereinsverwaltung.vereineSortieren.VereineMitgliederAnzahlAbwaerts;
-import jle.vereinsverwaltung.vereineSortieren.VereineMitgliederAnzahlAufwaerts;
+import jle.vereinsverwaltung.vereinesortieren.VereineMitgliederAnzahlAbwaerts;
+import jle.vereinsverwaltung.vereinesortieren.VereineMitgliederAnzahlAufwaerts;
 import jle.vereinsverwaltung.vorstand.Vorstand;
 import jle.vereinsverwaltung.vorstand.Vorstandsrollen;
 
@@ -57,13 +55,33 @@ public class Vereinsverwaltung {
   private static final int FIVE = 5;
   private static final int SIX = 6;
   private static final int SEVEN = 7;
+  private static final int EIGHT = 8;
 
   //<editor-fold desc="Message Properties because Checkstyle">
 
   private final String messages = "Messages";
   private final String faultyEntry = "faultyEntry";
-  private final String notANumberException = "notANumberException";
-
+  private final String notaNumberException = "notANumberException";
+  private final String numberOutOfRangeException = "numberOutOfRangeException";
+  private final String dontLeaveFieldEmpty = "dontLeaveFieldEmpty";
+  private final String noExistingClubMembers = "noExistingClubMembers";
+  private final String memberNumberAlreadyUsed = "memberNumberAlreadyUsed";
+  private final String enterIban = "enterIban";
+  private final String colon = ": ";
+  private final String chooseClubMember = "chooseClubMember";
+  private final String closeBraket = ")";
+  private final String newAddressWithCurrent = "newAddressWithCurrent";
+  private final String newPhoneNumber = "newPhoneNumber";
+  private final String noClubMembersYet = "noClubMembersYet";
+  private final String accountAlreadyExists = "accountAlreadyExists";
+  private final String counterOne = "1: ";
+  private final String counterTwo = "2: ";
+  private final String counterThree = "3: ";
+  private final String counterFour = "4: ";
+  private final String letterv = "v";
+  private final String fileNotFoundException = "fileNotFoundException";
+  private final String ioException = "ioException";
+  private final String exportImportFile = "./resources/clubManagement";
 
   //</editor-fold>
 
@@ -100,7 +118,7 @@ public class Vereinsverwaltung {
   }
 
   public void vereinsListeBearbeiten() throws ClubAlreadyExistsException {
-    MyBufferedReader.print(selectedBundle.getString("addOrEditClubOptions"));
+    MyBufferedReader.println(selectedBundle.getString("addOrEditClubOptions"));
     int eingabe = MyBufferedReader.forceReadInInt();
     String noClubExistsException = "noClubExistsException";
     switch (eingabe) {
@@ -143,6 +161,9 @@ public class Vereinsverwaltung {
       case SEVEN:
         spracheWechseln();
         break;
+      case EIGHT:
+        System.exit(0);
+        break;
       default:
         MyBufferedReader.printError(selectedBundle.getString(faultyEntry));
     }
@@ -169,7 +190,7 @@ public class Vereinsverwaltung {
   private void vereinBearbeiten() {
     Verein ausgewaehlterVerein = vereinAuswaehlen();
     String editClubOptions = "editClubOptions";
-    MyBufferedReader.print(selectedBundle.getString(editClubOptions));
+    MyBufferedReader.println(selectedBundle.getString(editClubOptions));
     // Der Switch wird so lange durchlaufen wie der Programmteil nicht aktiv durch eine Eingabe verlassen wird
     while (true) {
       int eingabe = MyBufferedReader.forceReadInInt();
@@ -187,8 +208,8 @@ public class Vereinsverwaltung {
           bankverbindungenBearbeiten(ausgewaehlterVerein);
           break;
         case FIVE:
-          MyBufferedReader.print(selectedBundle.getString("onlyOnePersonPerExecutiveRole"), YELLOW);
-          MyBufferedReader.print(selectedBundle.getString("whichPersonForExecutiveRole"));
+          MyBufferedReader.println(selectedBundle.getString("onlyOnePersonPerExecutiveRole"), YELLOW);
+          MyBufferedReader.println(selectedBundle.getString("whichPersonForExecutiveRole"));
           Mitglied ausgewaehltesMitglied = mitgliedAuswaehlen(ausgewaehlterVerein);
           vorstandsrolleZuweisen(ausgewaehltesMitglied);
           break;
@@ -202,10 +223,10 @@ public class Vereinsverwaltung {
           break;
       }
       // Am Ende jedes Cases muss einmal Enter gedrückt werden, um zur Bearbeitungsübersicht zurückzugelangen
-      MyBufferedReader.print(selectedBundle.getString("backToEditingView"));
+      MyBufferedReader.println(selectedBundle.getString("backToEditingView"));
       MyBufferedReader.readInString();
-      MyBufferedReader.print(selectedBundle.getString("selectedClubPrefix") + ausgewaehlterVerein.getName());
-      MyBufferedReader.print(selectedBundle.getString(editClubOptions));
+      MyBufferedReader.println(selectedBundle.getString("selectedClubPrefix") + ausgewaehlterVerein.getName());
+      MyBufferedReader.println(selectedBundle.getString(editClubOptions));
     }
   }
 
@@ -215,10 +236,10 @@ public class Vereinsverwaltung {
   private Verein vereinAuswaehlen() {
     Verein ausgewaehlterVerein;
     Collections.sort(vereinsListe);
-    MyBufferedReader.print(selectedBundle.getString("chooseClub"));
+    MyBufferedReader.println(selectedBundle.getString("chooseClub"));
     int i = 1;
     for (Verein verein : vereinsListe) {
-      MyBufferedReader.print(i + ". " + verein.getName());
+      MyBufferedReader.println(i + ". " + verein.getName());
       i++;
     }
     int userInput = -1;
@@ -227,10 +248,10 @@ public class Vereinsverwaltung {
       try {
         userInput = MyBufferedReader.readInInt(vereinsListe.size());
         ok = true;
-      } catch (NotANumberException e) {
-        MyBufferedReader.printError(selectedBundle.getString(notANumberException));
+      } catch (NotaNumberException e) {
+        MyBufferedReader.printError(selectedBundle.getString(notaNumberException));
       } catch (NumberOutOfRangeException e) {
-        System.err.println(selectedBundle.getString("numberOutOfRangeException"));
+        MyBufferedReader.printError(selectedBundle.getString(numberOutOfRangeException));
       }
     }
     ausgewaehlterVerein = vereinsListe.get(userInput - 1);
@@ -239,25 +260,27 @@ public class Vereinsverwaltung {
   //</editor-fold>
 
   private void vereinUmbenennen(Verein ausgewaehlterVerein) {
-    MyBufferedReader.print(selectedBundle.getString("selectedClubNamePrefix") + ausgewaehlterVerein.getName() + selectedBundle.getString("enterNewClubName"));
+    MyBufferedReader.println(selectedBundle.getString("selectedClubNamePrefix") + ausgewaehlterVerein.getName()
+        + selectedBundle.getString("enterNewClubName"));
     VereinsName neuerName = new VereinsName(MyBufferedReader.readInString());
     if (vereinSchonVorhanden(neuerName)) {
       MyBufferedReader.printError(selectedBundle.getString("clubAlreadyExistsException"));
-    } else if (!neuerName.getVereinsName().equals("")) {
+    } else if (!neuerName.getVereinsNameString().equals("")) {
       ausgewaehlterVerein.setName(neuerName);
     } else {
-      MyBufferedReader.print(RED + selectedBundle.getString("dontLeaveFieldEmpty") + RESET);
+      MyBufferedReader.println(RED + selectedBundle.getString(dontLeaveFieldEmpty) + RESET);
     }
   }
 
   public void beschreibungAendern(Verein ausgewaehlterVerein) {
     // Die alte Beschreibung des Vereins wird ausgegeben und die neue wird dem Verein zugewiesen
-    MyBufferedReader.print(selectedBundle.getString("clubDescriptionPrefix") + ausgewaehlterVerein.getBeschreibung() + selectedBundle.getString("enterNewClubDescription"));
+    MyBufferedReader.println(selectedBundle.getString("clubDescriptionPrefix") + ausgewaehlterVerein.getBeschreibung()
+        + selectedBundle.getString("enterNewClubDescription"));
     VereinsBeschreibung neueBeschreibung = new VereinsBeschreibung(MyBufferedReader.readInString());
-    if (!neueBeschreibung.getVereinsBeschreibung().equals("")) {
+    if (!neueBeschreibung.getVereinsBeschreibungString().equals("")) {
       ausgewaehlterVerein.setBeschreibung(neueBeschreibung);
     } else {
-      MyBufferedReader.print(RED + selectedBundle.getString("dontLeaveFieldEmpty") + RESET);
+      MyBufferedReader.println(RED + selectedBundle.getString(dontLeaveFieldEmpty) + RESET);
     }
   }
 
@@ -268,10 +291,10 @@ public class Vereinsverwaltung {
       try {
         userInput = MyBufferedReader.readInInt(FOUR, selectedBundle.getString("editClubMemberListOptions"));
         ok = true;
-      } catch (NotANumberException e) {
-        MyBufferedReader.printError(notANumberException);
+      } catch (NotaNumberException e) {
+        MyBufferedReader.printError(notaNumberException);
       } catch (NumberOutOfRangeException e) {
-        MyBufferedReader.printError("numberOutOfRangeException");
+        MyBufferedReader.printError(numberOutOfRangeException);
       }
     }
     Mitglied ausgewaehltesMitglied;
@@ -285,7 +308,7 @@ public class Vereinsverwaltung {
           ausgewaehltesMitglied = mitgliedAuswaehlen(ausgewaehlterVerein);
           mitgliedBearbeiten(ausgewaehltesMitglied, ausgewaehlterVerein);
         } else {
-          MyBufferedReader.printError(selectedBundle.getString("noExistingClubMembers"));
+          MyBufferedReader.printError(selectedBundle.getString(noExistingClubMembers));
         }
         break;
       case THREE:
@@ -305,14 +328,14 @@ public class Vereinsverwaltung {
             if (vorstand.getMitglied().equals(ausgewaehltesMitglied)) {
               MyBufferedReader.printError(selectedBundle.getString("memberHasExecutiveRole"));
               String output = vorstand.toString();
-              MyBufferedReader.print(output, BLUE);
+              MyBufferedReader.println(output, BLUE);
               break;
             }
           }
           ausgewaehlterVerein.getMitgliederliste().remove(ausgewaehltesMitglied);
-          MyBufferedReader.print(selectedBundle.getString("memberDeleted"));
+          MyBufferedReader.println(selectedBundle.getString("memberDeleted"));
         } else {
-          MyBufferedReader.printError(selectedBundle.getString("noExistingClubMembers"));
+          MyBufferedReader.printError(selectedBundle.getString(noExistingClubMembers));
         }
         break;
       default:
@@ -321,38 +344,36 @@ public class Vereinsverwaltung {
   }
 
   private boolean mitgliedSchonVorhanden(Mitgliedsnummer neueMitgliedsnummer, Verein ausgewaehlterVerein) {
-    boolean istgleich = false;
     for (int i = 0; i < ausgewaehlterVerein.getMitgliederliste().size(); i++) {
       Mitgliedsnummer vorhandeneMitgliedsnummer = ausgewaehlterVerein.getMitgliederliste().get(i).getMitgliedsnummer();
       if (neueMitgliedsnummer.equals(vorhandeneMitgliedsnummer)) {
-        istgleich = true;
+        return true;
       }
     }
-    return istgleich;
+    return false;
   }
 
   private Mitglied neuesMitgliedErstellen(Verein ausgewaehlterVerein) {
-    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-    MyBufferedReader.print(selectedBundle.getString("enterEveryFieldSeparately"));
-    MyBufferedReader.print(selectedBundle.getString("memberNumberPrefix"));
+    MyBufferedReader.println(selectedBundle.getString("enterEveryFieldSeparately"));
+    MyBufferedReader.println(selectedBundle.getString("memberNumberPrefix"));
     Mitgliedsnummer mitgliedsnummer = new Mitgliedsnummer(MyBufferedReader.readInString());
     // Es wird geprüft, ob die Mitgliedsnummers schon vergeben ist
     while (mitgliedSchonVorhanden(mitgliedsnummer, ausgewaehlterVerein)) {
-      MyBufferedReader.print(RED + selectedBundle.getString("memberNumberAlreadyUsed"));
+      MyBufferedReader.println(RED + selectedBundle.getString(memberNumberAlreadyUsed));
       mitgliedsnummer = new Mitgliedsnummer(MyBufferedReader.readInString());
     }
-    MyBufferedReader.print(selectedBundle.getString("forenamePrefix"));
+    MyBufferedReader.println(selectedBundle.getString("forenamePrefix"));
     Vorname vorname = new Vorname(MyBufferedReader.readInString());
-    MyBufferedReader.print(selectedBundle.getString("surnamePrefix"));
+    MyBufferedReader.println(selectedBundle.getString("surnamePrefix"));
     Nachname nachname = new Nachname(MyBufferedReader.readInString());
-    MyBufferedReader.print(selectedBundle.getString("birthdayPrefix"));
+    MyBufferedReader.println(selectedBundle.getString("birthdayPrefix"));
     Geburtsdatum geburtsdatum = entervalidBirthday();
-    MyBufferedReader.print(selectedBundle.getString("addressPrefix"));
+    MyBufferedReader.println(selectedBundle.getString("addressPrefix"));
     Adresse adresse = enterValidAddress();
-    MyBufferedReader.print(selectedBundle.getString("phoneNumberPrefix"));
+    MyBufferedReader.println(selectedBundle.getString("phoneNumberPrefix"));
     Telefonnummer telefonnummer = enterValidPhoneNumber();
     Mitglied neuesMitglied = new Mitglied(mitgliedsnummer, vorname, nachname, geburtsdatum, adresse, telefonnummer, ausgewaehlterVerein);
-    MyBufferedReader.print(selectedBundle.getString("wantToAddBankDetails"));
+    MyBufferedReader.println(selectedBundle.getString("wantToAddBankDetails"));
     String eingabe = MyBufferedReader.readInString();
     if (eingabe.equalsIgnoreCase("j")) {
       gibMitgliedBankverbindung(neuesMitglied);
@@ -371,7 +392,7 @@ public class Vereinsverwaltung {
   }
 
   private void gibMitgliedBankverbindung(Mitglied neuesMitglied) {
-    MyBufferedReader.print(selectedBundle.getString("enterIban"));
+    MyBufferedReader.println(selectedBundle.getString(enterIban));
     Iban iban = enterValidIban();
     neuesMitglied.setBankverbindung(new Bankverbindung(neuesMitglied, iban));
   }
@@ -382,19 +403,20 @@ public class Vereinsverwaltung {
     // Durchnummerierte Ausgabe der Mitglieder
     int nummerDesMiglieds = 1;
     for (Mitglied mitglied : ausgewaehlterVerein.getMitgliederliste()) {
-      MyBufferedReader.print(nummerDesMiglieds + ": " + mitglied.toString());
+      MyBufferedReader.println(nummerDesMiglieds + colon + mitglied.toString());
       nummerDesMiglieds++;
     }
     int userInput = -1;
     boolean ok = false;
     while (!ok) {
       try {
-        userInput = MyBufferedReader.readInInt(ausgewaehlterVerein.getMitgliederliste().size(), selectedBundle.getString("chooseClubMember"));
+        userInput = MyBufferedReader.readInInt(ausgewaehlterVerein.getMitgliederliste().size(),
+            selectedBundle.getString(chooseClubMember));
         ok = true;
-      } catch (NotANumberException e) {
-        System.err.println(selectedBundle.getString(notANumberException));
+      } catch (NotaNumberException e) {
+        MyBufferedReader.printError(selectedBundle.getString(notaNumberException));
       } catch (NumberOutOfRangeException e) {
-        System.err.println(selectedBundle.getString("numberOutOfRangeException"));
+        MyBufferedReader.printError(selectedBundle.getString(numberOutOfRangeException));
       }
     }
     return ausgewaehlterVerein.getMitgliederliste().get(userInput - 1);
@@ -403,36 +425,36 @@ public class Vereinsverwaltung {
   // Methode genutzt in CASE 2 der Vereinslisten-Bearbeitung
   // Die Methode bearbeitet ein Mitglied, indem neue Value-Objects zugewiesen werden
   private void mitgliedBearbeiten(Mitglied ausgewaehltesMitglied, Verein ausgewaehlterVerein) {
-    MyBufferedReader.print(selectedBundle.getString("editClubMemberOptions"));
+    MyBufferedReader.println(selectedBundle.getString("editClubMemberOptions"));
     int eingabe = MyBufferedReader.forceReadInInt();
     switch (eingabe) {
       case 1:
-        MyBufferedReader.print(selectedBundle.getString("newMemberNumber") + ausgewaehltesMitglied.getMitgliedsnummer() + ")");
-        MyBufferedReader.print(RED + selectedBundle.getString("noDoubleMemberNumber") + RESET);
+        MyBufferedReader.println(selectedBundle.getString("newMemberNumber") + ausgewaehltesMitglied.getMitgliedsnummer() + closeBraket);
+        MyBufferedReader.println(RED + selectedBundle.getString("noDoubleMemberNumber") + RESET);
         Mitgliedsnummer neueMitgliedsnummer = new Mitgliedsnummer(MyBufferedReader.readInString());
         while (mitgliedSchonVorhanden(neueMitgliedsnummer, ausgewaehlterVerein)) {
-          MyBufferedReader.print(RED + selectedBundle.getString("memberNumberAlreadyUsed") + RESET);
+          MyBufferedReader.println(RED + selectedBundle.getString(memberNumberAlreadyUsed) + RESET);
           neueMitgliedsnummer = new Mitgliedsnummer(MyBufferedReader.readInString());
         }
         ausgewaehltesMitglied.setMitgliedsnummer(neueMitgliedsnummer);
         break;
       case 2:
-        MyBufferedReader.print(selectedBundle.getString("newForename") + ausgewaehltesMitglied.getVorname() + ")");
+        MyBufferedReader.println(selectedBundle.getString("newForename") + ausgewaehltesMitglied.getVorname() + closeBraket);
         Vorname neuerVorname = new Vorname(MyBufferedReader.readInString());
         ausgewaehltesMitglied.setVorname(neuerVorname);
         break;
       case THREE:
-        MyBufferedReader.print(selectedBundle.getString("newSurname") + ausgewaehltesMitglied.getNachname() + ")");
+        MyBufferedReader.println(selectedBundle.getString("newSurname") + ausgewaehltesMitglied.getNachname() + closeBraket);
         Nachname neuerNachname = new Nachname(MyBufferedReader.readInString());
         ausgewaehltesMitglied.setNachname(neuerNachname);
         break;
       case FOUR:
-        MyBufferedReader.print(selectedBundle.getString("newBirthday") + ausgewaehltesMitglied.getGeburtsdatum() + ")");
+        MyBufferedReader.println(selectedBundle.getString("newBirthday") + ausgewaehltesMitglied.getGeburtsdatum() + closeBraket);
         Geburtsdatum neuesGeburtsdatum = entervalidBirthday();
         ausgewaehltesMitglied.setGeburtsdatum(neuesGeburtsdatum);
         break;
       case FIVE:
-        adressenBearbeiten(ausgewaehltesMitglied, ausgewaehlterVerein);
+        adressenBearbeiten(ausgewaehltesMitglied);
         break;
       case SIX:
         telefonnummernBearbeiten(ausgewaehltesMitglied);
@@ -445,9 +467,9 @@ public class Vereinsverwaltung {
 
   private void mitgliederAusgeben(Verein ausgewaehlterVerein) {
     if (ausgewaehlterVerein.getMitgliederliste().size() == 0) {
-      MyBufferedReader.printError(selectedBundle.getString("noExistingClubMembers"));
+      MyBufferedReader.printError(selectedBundle.getString(noExistingClubMembers));
     } else {
-      MyBufferedReader.print(selectedBundle.getString("chooseMemberListOutput"));
+      MyBufferedReader.println(selectedBundle.getString("chooseMemberListOutput"));
       int eingabe = MyBufferedReader.forceReadInInt();
       switch (eingabe) {
         case 1:
@@ -459,7 +481,7 @@ public class Vereinsverwaltung {
         case 2:
           Collections.reverse(ausgewaehlterVerein.getMitgliederliste());
           for (Mitglied mitglied : ausgewaehlterVerein.getMitgliederliste()) {
-            MyBufferedReader.print(mitglied.toString() + "\n");
+            MyBufferedReader.println(mitglied.toString());
           }
           break;
         default:
@@ -470,13 +492,13 @@ public class Vereinsverwaltung {
 
   //<editor-fold desc="Methoden zum bearbeiten der Adressen">
   // Methode leitet die Bearbeitung der Adressen ein
-  private void adressenBearbeiten(Mitglied ausgewaehltesMitglied, Verein ausgewaehlterVerein) {
-    MyBufferedReader.print(selectedBundle.getString("currentAddressesPrefix") + ausgewaehltesMitglied.getAdressen());
-    MyBufferedReader.print(selectedBundle.getString("editAddressesOptions"));
+  private void adressenBearbeiten(Mitglied ausgewaehltesMitglied) {
+    MyBufferedReader.println(selectedBundle.getString("currentAddressesPrefix") + ausgewaehltesMitglied.getAdressen());
+    MyBufferedReader.println(selectedBundle.getString("editAddressesOptions"));
     int eingabe = MyBufferedReader.forceReadInInt();
     switch (eingabe) {
       case 1:
-        MyBufferedReader.print(selectedBundle.getString("newAddressWithCurrent") + ausgewaehltesMitglied.getAdressen() + ")");
+        MyBufferedReader.println(selectedBundle.getString(newAddressWithCurrent) + ausgewaehltesMitglied.getAdressen() + closeBraket);
         Adresse neueAdresse;
         while (true) {
           try {
@@ -503,26 +525,26 @@ public class Vereinsverwaltung {
   //Methode zum ändern einer Adresse
   public void eineAdresseAendern(Mitglied ausgewaehltesMitglied) {
     if (ausgewaehltesMitglied.getAdressen().size() == 1) {
-      MyBufferedReader.print(selectedBundle.getString("newAddressWithCurrent") + ausgewaehltesMitglied.getAdressen() + ")");
+      MyBufferedReader.println(selectedBundle.getString(newAddressWithCurrent) + ausgewaehltesMitglied.getAdressen() + closeBraket);
       Adresse neueAdresse = enterValidAddress();
       ausgewaehltesMitglied.getAdressen().remove(0);
       ausgewaehltesMitglied.getAdressen().add(neueAdresse);
     } else {
-      MyBufferedReader.print(selectedBundle.getString("chooseAddress"));
+      MyBufferedReader.println(selectedBundle.getString("chooseAddress"));
       int i = 1;
       for (Adresse adresse : ausgewaehltesMitglied.getAdressen()) {
-        MyBufferedReader.print(i + ": " + adresse.toString());
+        MyBufferedReader.println(i + colon + adresse.toString());
         i++;
       }
       int userInput;
       while (true) {
         try {
-          userInput = MyBufferedReader.readInInt(ausgewaehltesMitglied.getAdressen().size(), selectedBundle.getString("chooseClubMember"));
+          userInput = MyBufferedReader.readInInt(ausgewaehltesMitglied.getAdressen().size(), selectedBundle.getString(chooseClubMember));
           break;
-        } catch (NotANumberException e) {
-          System.err.println(selectedBundle.getString(notANumberException));
+        } catch (NotaNumberException e) {
+          MyBufferedReader.printError(selectedBundle.getString(notaNumberException));
         } catch (NumberOutOfRangeException e) {
-          System.err.println(selectedBundle.getString("numberOutOfRangeException"));
+          MyBufferedReader.printError(selectedBundle.getString(numberOutOfRangeException));
         }
       }
       ausgewaehltesMitglied.getAdressen().add((userInput - 1), uniqueAddress(ausgewaehltesMitglied, enterValidAddress()));
@@ -531,10 +553,10 @@ public class Vereinsverwaltung {
   }
 
   private void eineAdresseLoeschen(Mitglied ausgewaehltesMitglied) {
-    MyBufferedReader.print(selectedBundle.getString("deleteAddress"));
+    MyBufferedReader.println(selectedBundle.getString("deleteAddress"));
     int i = 1;
     for (Adresse adresse : ausgewaehltesMitglied.getAdressen()) {
-      MyBufferedReader.print(i + ": " + adresse.toString());
+      MyBufferedReader.println(i + colon + adresse.toString());
       i++;
     }
     int userInput = -1;
@@ -543,10 +565,10 @@ public class Vereinsverwaltung {
       try {
         userInput = MyBufferedReader.readInInt(ausgewaehltesMitglied.getAdressen().size());
         ok = true;
-      } catch (NotANumberException e) {
-        System.err.println(selectedBundle.getString(notANumberException));
+      } catch (NotaNumberException e) {
+        MyBufferedReader.printError(selectedBundle.getString(notaNumberException));
       } catch (NumberOutOfRangeException e) {
-        System.err.println(selectedBundle.getString("numberOutOfRangeException"));
+        MyBufferedReader.printError(selectedBundle.getString(numberOutOfRangeException));
       }
     }
     ausgewaehltesMitglied.getAdressen().remove(userInput);
@@ -609,11 +631,12 @@ public class Vereinsverwaltung {
   //<editor-fold desc="Methoden zum bearbeiten der Telefonnummern">
 
   private void telefonnummernBearbeiten(Mitglied ausgewaehltesMitglied) {
-    MyBufferedReader.print(selectedBundle.getString("currentPhoneNumber") + ausgewaehltesMitglied.getTelefonnummern() + selectedBundle.getString("editPhoneNumberOptions"));
+    MyBufferedReader.println(selectedBundle.getString("currentPhoneNumber") + ausgewaehltesMitglied.getTelefonnummern()
+        + selectedBundle.getString("editPhoneNumberOptions"));
     int eingabe = MyBufferedReader.forceReadInInt();
     switch (eingabe) {
       case 1:
-        MyBufferedReader.print(selectedBundle.getString("newPhoneNumber") + ausgewaehltesMitglied.getTelefonnummern() + ")");
+        MyBufferedReader.println(selectedBundle.getString(newPhoneNumber) + ausgewaehltesMitglied.getTelefonnummern() + closeBraket);
         Telefonnummer neueTelefonnummer;
         try {
           neueTelefonnummer = uniquePhoneNumber(ausgewaehltesMitglied, enterValidPhoneNumber());
@@ -638,15 +661,15 @@ public class Vereinsverwaltung {
   // Ändert eine Telefonnummer
   private void eineTelefonnummerAendern(Mitglied ausgewaehltesMitglied) {
     if (ausgewaehltesMitglied.getTelefonnummern().size() == 1) {
-      MyBufferedReader.print(selectedBundle.getString("newPhoneNumber") + ausgewaehltesMitglied.getTelefonnummern() + ")");
+      MyBufferedReader.println(selectedBundle.getString(newPhoneNumber) + ausgewaehltesMitglied.getTelefonnummern() + closeBraket);
       Telefonnummer neueTelefonnummer = enterValidPhoneNumber();
       ausgewaehltesMitglied.getTelefonnummern().remove(0);
       ausgewaehltesMitglied.getTelefonnummern().add(neueTelefonnummer);
     } else {
-      MyBufferedReader.print(selectedBundle.getString("chooseEditPhoneNumber"));
+      MyBufferedReader.println(selectedBundle.getString("chooseEditPhoneNumber"));
       int i = 1;
       for (Telefonnummer telefonnummer : ausgewaehltesMitglied.getTelefonnummern()) {
-        MyBufferedReader.print(i + ": " + telefonnummer.getTelefonnummer());
+        MyBufferedReader.println(i + colon + telefonnummer.getTelefonnummerString());
         i++;
       }
       int userInput = -1;
@@ -655,13 +678,13 @@ public class Vereinsverwaltung {
         try {
           userInput = MyBufferedReader.readInInt(ausgewaehltesMitglied.getTelefonnummern().size());
           ok = true;
-        } catch (NotANumberException e) {
-          MyBufferedReader.printError(selectedBundle.getString(notANumberException));
+        } catch (NotaNumberException e) {
+          MyBufferedReader.printError(selectedBundle.getString(notaNumberException));
         } catch (NumberOutOfRangeException e) {
-          MyBufferedReader.printError(selectedBundle.getString("numberOutOfRangeException"));
+          MyBufferedReader.printError(selectedBundle.getString(numberOutOfRangeException));
         }
       }
-      MyBufferedReader.print("Please enter the changed phone number.");
+      MyBufferedReader.println("Please enter the changed phone number.");
       ausgewaehltesMitglied.getTelefonnummern().remove(userInput - 1);
       ausgewaehltesMitglied.getTelefonnummern().add((userInput - 1), uniquePhoneNumber(ausgewaehltesMitglied, enterValidPhoneNumber()));
     }
@@ -669,10 +692,10 @@ public class Vereinsverwaltung {
 
   // Löscht eine Telefonnummer
   private void eineTelefonnummerLoeschen(Mitglied ausgewaehltesMitglied) {
-    MyBufferedReader.print(selectedBundle.getString("chooseDeletePhoneNumber"));
+    MyBufferedReader.println(selectedBundle.getString("chooseDeletePhoneNumber"));
     int i = 1;
     for (Telefonnummer telefonnummer : ausgewaehltesMitglied.getTelefonnummern()) {
-      MyBufferedReader.print(i + ": " + telefonnummer.getTelefonnummer());
+      MyBufferedReader.println(i + colon + telefonnummer.getTelefonnummerString());
       i++;
     }
     int userInput = -1;
@@ -681,10 +704,10 @@ public class Vereinsverwaltung {
       try {
         userInput = MyBufferedReader.readInInt(ausgewaehltesMitglied.getTelefonnummern().size() - 1);
         ok = true;
-      } catch (NotANumberException e) {
-        MyBufferedReader.printError(selectedBundle.getString(notANumberException));
+      } catch (NotaNumberException e) {
+        MyBufferedReader.printError(selectedBundle.getString(notaNumberException));
       } catch (NumberOutOfRangeException e) {
-        MyBufferedReader.printError(selectedBundle.getString("numberOutOfRangeException"));
+        MyBufferedReader.printError(selectedBundle.getString(numberOutOfRangeException));
       }
     }
     ausgewaehltesMitglied.getTelefonnummern().remove(userInput);
@@ -714,9 +737,9 @@ public class Vereinsverwaltung {
   // Diese Methode leitet das Bearbeiten der Bankverbindungen ein
   public void bankverbindungenBearbeiten(Verein ausgewaehlterVerein) {
     if (ausgewaehlterVerein.getMitgliederliste().size() == 0) {
-      MyBufferedReader.printError(selectedBundle.getString("noClubMembersYet"));
+      MyBufferedReader.printError(selectedBundle.getString(noClubMembersYet));
     } else {
-      MyBufferedReader.print(selectedBundle.getString("bankDetailsOptions"));
+      MyBufferedReader.println(selectedBundle.getString("bankDetailsOptions"));
       int eingabe = MyBufferedReader.forceReadInInt();
       switch (eingabe) {
         case 1:
@@ -737,25 +760,20 @@ public class Vereinsverwaltung {
 
   // Methode fügt einem Verein eine Bankverbindung hinzu
   private void addBankverbindung(Verein ausgewaehlterVerein) {
-    MyBufferedReader.print(selectedBundle.getString("bankDetailsInfo"));
-    MyBufferedReader.print(RED + selectedBundle.getString("bankDetailsRule"));
-    System.out.print(selectedBundle.getString("chooseAccountOwner"));
-    int mitgliedsNummer = 1;
-    for (Mitglied mitglied : ausgewaehlterVerein.getMitgliederliste()) {
-      MyBufferedReader.print(mitgliedsNummer + ": " + mitglied.toString());
-      mitgliedsNummer++;
-    }
+    MyBufferedReader.println(selectedBundle.getString("bankDetailsInfo"));
+    MyBufferedReader.println(RED, selectedBundle.getString("bankDetailsRule"));
+    MyBufferedReader.println(selectedBundle.getString("chooseAccountOwner"));
     Mitglied ausgewaehltesMitglied = mitgliedAuswaehlen(ausgewaehlterVerein);
-    MyBufferedReader.print(selectedBundle.getString("enterIban"));
+    MyBufferedReader.println(selectedBundle.getString(enterIban));
     Iban ibanDesKontos = enterValidIban();
     if (ausgewaehlterVerein.getBankverbindungen().size() > 0) {
       while (bankverbindungSchonVorhanden(ibanDesKontos, ausgewaehlterVerein)) {
-        MyBufferedReader.print(RED + selectedBundle.getString("accountAlreadyExists") + RESET);
+        MyBufferedReader.println(RED + selectedBundle.getString(accountAlreadyExists) + RESET);
         ibanDesKontos = new Iban(MyBufferedReader.readInString());
       }
     }
     ausgewaehlterVerein.getBankverbindungen().add(new Bankverbindung(ausgewaehltesMitglied, ibanDesKontos));
-    MyBufferedReader.print(selectedBundle.getString("bankDetailsAdded"));
+    MyBufferedReader.println(selectedBundle.getString("bankDetailsAdded"));
   }
 
   private Iban enterValidIban() {
@@ -770,26 +788,26 @@ public class Vereinsverwaltung {
 
   private void eineBankverbindungBearbeiten(Verein ausgewaehlterVerein) {
     Bankverbindung ausgewaehlteBankverbindung = bankverbindungAuswaehlen(ausgewaehlterVerein);
-    MyBufferedReader.print(selectedBundle.getString("whatShouldBeEdited"));
-    MyBufferedReader.print("1. " + selectedBundle.getString("accountOwnerPrefix") + ausgewaehlteBankverbindung.getKontoinhaber());
-    MyBufferedReader.print("2. " + selectedBundle.getString("ibanPrefix") + ausgewaehlteBankverbindung.getIban());
+    MyBufferedReader.println(selectedBundle.getString("whatShouldBeEdited"));
+    MyBufferedReader.println(counterOne + selectedBundle.getString("accountOwnerPrefix") + ausgewaehlteBankverbindung.getKontoinhaber());
+    MyBufferedReader.println(counterTwo + selectedBundle.getString("ibanPrefix") + ausgewaehlteBankverbindung.getIban());
     int eingabe = MyBufferedReader.forceReadInInt();
     switch (eingabe) {
       case 1:
-        MyBufferedReader.print(selectedBundle.getString("newAccountOwner"));
+        MyBufferedReader.println(selectedBundle.getString("newAccountOwner"));
         Mitglied neuerKontoinhaber = mitgliedAuswaehlen(ausgewaehlterVerein);
         ausgewaehlteBankverbindung.setKontoinhaber(neuerKontoinhaber);
-        MyBufferedReader.print(selectedBundle.getString("accountOwnerChangeSuccessful"));
+        MyBufferedReader.println(selectedBundle.getString("accountOwnerChangeSuccessful"));
         break;
       case 2:
-        MyBufferedReader.print(selectedBundle.getString("newIban"));
+        MyBufferedReader.println(selectedBundle.getString("newIban"));
         Iban neueIban = enterValidIban();
         while (bankverbindungSchonVorhanden(neueIban, ausgewaehlterVerein)) {
-          MyBufferedReader.print(RED + selectedBundle.getString("accountAlreadyExists"));
+          MyBufferedReader.println(RED + selectedBundle.getString(accountAlreadyExists));
           neueIban = new Iban(MyBufferedReader.readInString());
         }
         ausgewaehlteBankverbindung.setIban(neueIban);
-        MyBufferedReader.print(selectedBundle.getString("accountIbanChangeSuccessful"));
+        MyBufferedReader.println(selectedBundle.getString("accountIbanChangeSuccessful"));
         break;
       case 0:
         break;
@@ -799,21 +817,23 @@ public class Vereinsverwaltung {
   }
 
   private Bankverbindung bankverbindungAuswaehlen(Verein ausgewaehlterVerein) {
-    MyBufferedReader.print(selectedBundle.getString("currentAccountInfoOfClub") + ausgewaehlterVerein.getName() + ":\n");
+    String semicolonWithLinebreak = ":\n";
+    MyBufferedReader.println(selectedBundle.getString("currentAccountInfoOfClub") + ausgewaehlterVerein.getName() + semicolonWithLinebreak);
     for (int i = 0; i < ausgewaehlterVerein.getBankverbindungen().size(); i++) {
-      MyBufferedReader.print(selectedBundle.getString("bankAccountPrefix") + (i + 1) + ":\n" + ausgewaehlterVerein.getBankverbindungen().get(i).toString());
+      MyBufferedReader.println(selectedBundle.getString("bankAccountPrefix") + (i + 1) + semicolonWithLinebreak
+          + ausgewaehlterVerein.getBankverbindungen().get(i).toString());
     }
-    MyBufferedReader.print(selectedBundle.getString("chooseAccount"));
+    MyBufferedReader.println(selectedBundle.getString("chooseAccount"));
     int userInput = -1;
     boolean ok = false;
     while (!ok) {
       try {
         userInput = MyBufferedReader.readInInt(ausgewaehlterVerein.getBankverbindungen().size());
         ok = true;
-      } catch (NotANumberException e) {
-        System.err.println(selectedBundle.getString(notANumberException));
+      } catch (NotaNumberException e) {
+        MyBufferedReader.printError(selectedBundle.getString(notaNumberException));
       } catch (NumberOutOfRangeException e) {
-        System.err.println(selectedBundle.getString("numberOutOfRangeException"));
+        MyBufferedReader.printError(selectedBundle.getString(numberOutOfRangeException));
       }
     }
 
@@ -844,9 +864,9 @@ public class Vereinsverwaltung {
   // Start der Vorstandsrollen-Zuweisung
 
   private void vorstandsrolleZuweisen(Mitglied ausgewaehltesMitglied) {
-    MyBufferedReader.print(selectedBundle.getString("executiveRoleCompleteOrSubstitutional"));
+    MyBufferedReader.println(selectedBundle.getString("executiveRoleCompleteOrSubstitutional"));
     String vollstaendigOderKommissarisch = MyBufferedReader.readInString();
-    if (vollstaendigOderKommissarisch.equalsIgnoreCase("v") || vollstaendigOderKommissarisch.equalsIgnoreCase("k")) {
+    if (vollstaendigOderKommissarisch.equalsIgnoreCase(letterv) || vollstaendigOderKommissarisch.equalsIgnoreCase("k")) {
       vorstandAuswaehlen(ausgewaehltesMitglied, vollstaendigOderKommissarisch.toLowerCase());
     } else {
       MyBufferedReader.printError(selectedBundle.getString(faultyEntry));
@@ -857,69 +877,90 @@ public class Vereinsverwaltung {
   // Weißt die Vorstandrollen zu
 
   private void vorstandAuswaehlen(Mitglied ausgewaehltesMitglied, String vollstaendigOderKommissarisch) {
-    if (vollstaendigOderKommissarisch.equals("v")) {
-      MyBufferedReader.print(selectedBundle.getString("chooseExecutiveRole"));
-      MyBufferedReader.print("1. " + Vorstandsrollen.ERSTER_VORSITZENDER);
-      MyBufferedReader.print("2. " + Vorstandsrollen.ZWEITER_VORSITZENDER);
-      MyBufferedReader.print("3. " + Vorstandsrollen.SCHRIFTFUEHRER);
-      MyBufferedReader.print("4. " + Vorstandsrollen.KASSENWART);
+    if (vollstaendigOderKommissarisch.equals(letterv)) {
+      assignExecutiveRole(ausgewaehltesMitglied);
     } else {
-      MyBufferedReader.print(selectedBundle.getString("chooseSubstitutionalRole"));
-      MyBufferedReader.print("1. " + Vorstandsrollen.ERSTER_VORSITZENDER_KOMMISSARISCH);
-      MyBufferedReader.print("2. " + Vorstandsrollen.ZWEITER_VORSITZENDER_KOMMISSARISCH);
-      MyBufferedReader.print("3. " + Vorstandsrollen.SCHRIFTFUEHRER_KOMMISSARISCH);
-      MyBufferedReader.print("4. " + Vorstandsrollen.KASSENWART_KOMMISSARISCH);
+      assignSubstitutionalRole(ausgewaehltesMitglied);
     }
-    Vorstandsrollen chosenRole;
+  }
+
+  private void assignExecutiveRole(Mitglied ausgewaehltesMitglied) {
+    MyBufferedReader.println(selectedBundle.getString("chooseExecutiveRole"));
+    MyBufferedReader.println(counterOne + Vorstandsrollen.ERSTER_VORSITZENDER);
+    MyBufferedReader.println(counterTwo + Vorstandsrollen.ZWEITER_VORSITZENDER);
+    MyBufferedReader.println(counterThree + Vorstandsrollen.SCHRIFTFUEHRER);
+    MyBufferedReader.println(counterFour + Vorstandsrollen.KASSENWART);
     Vorstand newRole;
     int userInput = MyBufferedReader.forceReadInInt();
     switch (userInput) {
       case 1:
-        if (vollstaendigOderKommissarisch.equals("v")) {
-          chosenRole = Vorstandsrollen.ERSTER_VORSITZENDER;
-        } else {
-          chosenRole = Vorstandsrollen.ERSTER_VORSITZENDER_KOMMISSARISCH;
-        }
         if (ausgewaehltesMitglied.getVerein().getVorstandsrollen().isEmpty()) {
-          vorstandsrolleEntfernen(ausgewaehltesMitglied, chosenRole);
+          vorstandsrolleEntfernen(ausgewaehltesMitglied, Vorstandsrollen.ERSTER_VORSITZENDER);
         }
-        newRole = new Vorstand(ausgewaehltesMitglied, chosenRole);
+        newRole = new Vorstand(ausgewaehltesMitglied, Vorstandsrollen.ERSTER_VORSITZENDER);
         ausgewaehltesMitglied.getVerein().getVorstandsrollen().add(newRole);
         break;
       case 2:
-        if (vollstaendigOderKommissarisch.equals("v")) {
-          chosenRole = Vorstandsrollen.ZWEITER_VORSITZENDER;
-        } else {
-          chosenRole = Vorstandsrollen.ZWEITER_VORSITZENDER_KOMMISSARISCH;
-        }
         if (!ausgewaehltesMitglied.getVerein().getVorstandsrollen().isEmpty()) {
-          vorstandsrolleEntfernen(ausgewaehltesMitglied, chosenRole);
+          vorstandsrolleEntfernen(ausgewaehltesMitglied, Vorstandsrollen.ZWEITER_VORSITZENDER);
         }
-        newRole = new Vorstand(ausgewaehltesMitglied, chosenRole);
+        newRole = new Vorstand(ausgewaehltesMitglied, Vorstandsrollen.ZWEITER_VORSITZENDER);
         ausgewaehltesMitglied.getVerein().getVorstandsrollen().add(newRole);
         break;
       case THREE:
-        if (vollstaendigOderKommissarisch.equals("v")) {
-          chosenRole = Vorstandsrollen.SCHRIFTFUEHRER;
-        } else {
-          chosenRole = Vorstandsrollen.SCHRIFTFUEHRER_KOMMISSARISCH;
-        }
         if (!ausgewaehltesMitglied.getVerein().getVorstandsrollen().isEmpty()) {
-          vorstandsrolleEntfernen(ausgewaehltesMitglied, chosenRole);
+          vorstandsrolleEntfernen(ausgewaehltesMitglied, Vorstandsrollen.SCHRIFTFUEHRER);
         }
-        newRole = new Vorstand(ausgewaehltesMitglied, chosenRole);
+        newRole = new Vorstand(ausgewaehltesMitglied, Vorstandsrollen.SCHRIFTFUEHRER);
         ausgewaehltesMitglied.getVerein().getVorstandsrollen().add(newRole);
         break;
       case FOUR:
-        if (vollstaendigOderKommissarisch.equals("v")) {
-          chosenRole = Vorstandsrollen.KASSENWART;
-        } else {
-          chosenRole = Vorstandsrollen.KASSENWART_KOMMISSARISCH;
-        }
         if (!ausgewaehltesMitglied.getVerein().getVorstandsrollen().isEmpty()) {
-          vorstandsrolleEntfernen(ausgewaehltesMitglied, chosenRole);
+          vorstandsrolleEntfernen(ausgewaehltesMitglied, Vorstandsrollen.KASSENWART);
         }
-        newRole = new Vorstand(ausgewaehltesMitglied, chosenRole);
+        newRole = new Vorstand(ausgewaehltesMitglied, Vorstandsrollen.KASSENWART);
+        ausgewaehltesMitglied.getVerein().getVorstandsrollen().add(newRole);
+        break;
+      default:
+        MyBufferedReader.printInvalidInput();
+    }
+  }
+
+  private void assignSubstitutionalRole(Mitglied ausgewaehltesMitglied) {
+    MyBufferedReader.println(selectedBundle.getString("chooseSubstitutionalRole"));
+    MyBufferedReader.println(counterOne + Vorstandsrollen.ERSTER_VORSITZENDER_KOMMISSARISCH);
+    MyBufferedReader.println(counterTwo + Vorstandsrollen.ZWEITER_VORSITZENDER_KOMMISSARISCH);
+    MyBufferedReader.println(counterThree + Vorstandsrollen.SCHRIFTFUEHRER_KOMMISSARISCH);
+    MyBufferedReader.println(counterFour + Vorstandsrollen.KASSENWART_KOMMISSARISCH);
+    Vorstand newRole;
+    int userInput = MyBufferedReader.forceReadInInt();
+    switch (userInput) {
+      case 1:
+        if (ausgewaehltesMitglied.getVerein().getVorstandsrollen().isEmpty()) {
+          vorstandsrolleEntfernen(ausgewaehltesMitglied, Vorstandsrollen.ERSTER_VORSITZENDER_KOMMISSARISCH);
+        }
+        newRole = new Vorstand(ausgewaehltesMitglied, Vorstandsrollen.ERSTER_VORSITZENDER_KOMMISSARISCH);
+        ausgewaehltesMitglied.getVerein().getVorstandsrollen().add(newRole);
+        break;
+      case 2:
+        if (!ausgewaehltesMitglied.getVerein().getVorstandsrollen().isEmpty()) {
+          vorstandsrolleEntfernen(ausgewaehltesMitglied, Vorstandsrollen.ZWEITER_VORSITZENDER_KOMMISSARISCH);
+        }
+        newRole = new Vorstand(ausgewaehltesMitglied, Vorstandsrollen.ZWEITER_VORSITZENDER_KOMMISSARISCH);
+        ausgewaehltesMitglied.getVerein().getVorstandsrollen().add(newRole);
+        break;
+      case THREE:
+        if (!ausgewaehltesMitglied.getVerein().getVorstandsrollen().isEmpty()) {
+          vorstandsrolleEntfernen(ausgewaehltesMitglied, Vorstandsrollen.SCHRIFTFUEHRER_KOMMISSARISCH);
+        }
+        newRole = new Vorstand(ausgewaehltesMitglied, Vorstandsrollen.SCHRIFTFUEHRER_KOMMISSARISCH);
+        ausgewaehltesMitglied.getVerein().getVorstandsrollen().add(newRole);
+        break;
+      case FOUR:
+        if (!ausgewaehltesMitglied.getVerein().getVorstandsrollen().isEmpty()) {
+          vorstandsrolleEntfernen(ausgewaehltesMitglied, Vorstandsrollen.KASSENWART_KOMMISSARISCH);
+        }
+        newRole = new Vorstand(ausgewaehltesMitglied, Vorstandsrollen.KASSENWART_KOMMISSARISCH);
         ausgewaehltesMitglied.getVerein().getVorstandsrollen().add(newRole);
         break;
       default:
@@ -937,16 +978,16 @@ public class Vereinsverwaltung {
   // Zeigt alle Vorstände an
   private void vorstandsrollenAnzeigen(Verein ausgewaehlterVerein) {
     if (ausgewaehlterVerein.getMitgliederliste().isEmpty()) {
-      MyBufferedReader.printError(selectedBundle.getString("noClubMembersYet"));
+      MyBufferedReader.printError(selectedBundle.getString(noClubMembersYet));
     }
     for (Vorstand vorstand : ausgewaehlterVerein.getVorstandsrollen()) {
-      if (vorstand.getVorstandsrolle().equals(Vorstandsrollen.ERSTER_VORSITZENDER) ||
-          vorstand.getVorstandsrolle().equals(Vorstandsrollen.ZWEITER_VORSITZENDER) ||
-          vorstand.getVorstandsrolle().equals(Vorstandsrollen.SCHRIFTFUEHRER) ||
-          vorstand.getVorstandsrolle().equals(Vorstandsrollen.KASSENWART)) {
-        MyBufferedReader.print(vorstand.toString(), BLUE);
+      if (vorstand.getVorstandsrolle().equals(Vorstandsrollen.ERSTER_VORSITZENDER)
+          || vorstand.getVorstandsrolle().equals(Vorstandsrollen.ZWEITER_VORSITZENDER)
+          || vorstand.getVorstandsrolle().equals(Vorstandsrollen.SCHRIFTFUEHRER)
+          || vorstand.getVorstandsrolle().equals(Vorstandsrollen.KASSENWART)) {
+        MyBufferedReader.println(vorstand.toString(), BLUE);
       } else {
-        MyBufferedReader.print(vorstand.toString(), YELLOW);
+        MyBufferedReader.println(vorstand.toString(), YELLOW);
       }
     }
 
@@ -959,31 +1000,31 @@ public class Vereinsverwaltung {
   //<editor-fold desc="CASE 3 der Vereinslisten-Bearbeitung:">
   // Gibt die Vereine sortiert aus
   private void vereineAusgeben() {
-    MyBufferedReader.print(selectedBundle.getString("printClubListOptions"));
+    MyBufferedReader.println(selectedBundle.getString("printClubListOptions"));
     int eingabe = MyBufferedReader.forceReadInInt();
     switch (eingabe) {
       case 1:
         Collections.sort(getVereinsListe());
         for (Verein verein : getVereinsListe()) {
-          MyBufferedReader.print(verein.toString() + "\n");
+          MyBufferedReader.println(verein.toString());
         }
         break;
       case 2:
         Collections.reverse(getVereinsListe());
         for (Verein verein : getVereinsListe()) {
-          MyBufferedReader.print(verein.toString() + "\n");
+          MyBufferedReader.println(verein.toString());
         }
         break;
       case THREE:
-        Collections.sort(getVereinsListe(), new VereineMitgliederAnzahlAufwaerts());
+        getVereinsListe().sort(new VereineMitgliederAnzahlAufwaerts());
         for (Verein verein : getVereinsListe()) {
-          MyBufferedReader.print(verein.toString() + "\n");
+          MyBufferedReader.println(verein.toString());
         }
         break;
       case FOUR:
-        Collections.sort(getVereinsListe(), new VereineMitgliederAnzahlAbwaerts());
+        getVereinsListe().sort(new VereineMitgliederAnzahlAbwaerts());
         for (Verein verein : getVereinsListe()) {
-          MyBufferedReader.print(verein.toString() + "\n");
+          MyBufferedReader.println(verein.toString());
         }
         break;
       default:
@@ -996,10 +1037,10 @@ public class Vereinsverwaltung {
   // Entfernt einen Verein
   private void vereinEntfernen() {
     Collections.sort(getVereinsListe());
-    MyBufferedReader.print(selectedBundle.getString("chooseClubToDelete"));
+    MyBufferedReader.println(selectedBundle.getString("chooseClubToDelete"));
     int i = 1;
     for (Verein verein : getVereinsListe()) {
-      MyBufferedReader.print(i + ": " + verein.toString() + "\n");
+      MyBufferedReader.println(i + colon + verein.toString());
       i++;
     }
     int userInput = -1;
@@ -1008,14 +1049,14 @@ public class Vereinsverwaltung {
       try {
         userInput = MyBufferedReader.readInInt(getVereinsListe().size());
         ok = true;
-      } catch (NotANumberException e) {
-        MyBufferedReader.printError(selectedBundle.getString(notANumberException));
+      } catch (NotaNumberException e) {
+        MyBufferedReader.printError(selectedBundle.getString(notaNumberException));
       } catch (NumberOutOfRangeException e) {
-        MyBufferedReader.printError(selectedBundle.getString("numberOutOfRangeException"));
+        MyBufferedReader.printError(selectedBundle.getString(numberOutOfRangeException));
       }
     }
     getVereinsListe().remove(userInput - 1);
-    MyBufferedReader.print(selectedBundle.getString("clubDeletedSuccess"));
+    MyBufferedReader.println(selectedBundle.getString("clubDeletedSuccess"));
   }
 
   private void vereineExportieren() {
@@ -1023,16 +1064,16 @@ public class Vereinsverwaltung {
     String exportFileNameString = MyBufferedReader.readInString(selectedBundle.getString("enterExportFileName"));
     //File exportDirectory = new File(exportDirectoryString);
 
-    File exportDirectory = new File("./resources/clubManagement");
+    File exportDirectory = new File(exportImportFile);
     String exportFileName = "clubManagementExport";
-    CSVService exportCsvService = new CSVService(this.vereinsListe, exportDirectory.getPath(), exportFileName + ".csv");
+    CsvService exportCsvService = new CsvService(this.vereinsListe, exportDirectory.getPath(), exportFileName + ".csv");
     try {
-      exportCsvService.exportClubListToCSV(new VereinsParser());
-      MyBufferedReader.print(selectedBundle.getString("exportSuccessful"));
+      exportCsvService.exportClubListToCsv(new VereinsParser());
+      MyBufferedReader.println(selectedBundle.getString("exportSuccessful"));
     } catch (FileNotFoundException e) {
-      MyBufferedReader.printError(selectedBundle.getString("fileNotFoundException"));
+      MyBufferedReader.printError(selectedBundle.getString(fileNotFoundException));
     } catch (IOException e) {
-      MyBufferedReader.printError(selectedBundle.getString("ioException"));
+      MyBufferedReader.printError(selectedBundle.getString(ioException));
     }
   }
 
@@ -1041,24 +1082,24 @@ public class Vereinsverwaltung {
     String exportFileNameString = MyBufferedReader.readInString(selectedBundle.getString("enterImportFileName"));
     //File importDirectory = new File(importDirectoryString);
 
-    File importDirectory = new File("./resources/clubManagement");
+    File importDirectory = new File(exportImportFile);
     String importFilename = "clubManagementExport.csv";
-    CSVService importCsvService = new CSVService(this.vereinsListe, importDirectory.getPath(), importFilename);
-    LinkedList<Verein> clubList = new LinkedList<>();
+    CsvService importCsvService = new CsvService(this.vereinsListe, importDirectory.getPath(), importFilename);
+    LinkedList<Verein> clubList;
     try {
       clubList = importCsvService.importClubToSystem();
       this.vereinsListe.addAll(clubList);
-      MyBufferedReader.print(selectedBundle.getString("importSuccessful"));
+      MyBufferedReader.println(selectedBundle.getString("importSuccessful"));
     } catch (FileNotFoundException e) {
-      System.err.println("fileNotFoundException");
+      MyBufferedReader.printError(fileNotFoundException);
     } catch (IOException e) {
-      System.err.println(selectedBundle.getString("ioException"));
+      MyBufferedReader.printError(selectedBundle.getString(ioException));
     }
   }
 
   private void spracheWechseln() {
     try {
-      MyBufferedReader.print(selectedBundle.getString("chooseLanguage"));
+      MyBufferedReader.println(selectedBundle.getString("chooseLanguage"));
       int selectedLanguage = MyBufferedReader.readInInt(2);
       if (selectedLanguage == 1) {
         this.selectedBundle = this.germanBundle;
@@ -1067,12 +1108,12 @@ public class Vereinsverwaltung {
       } else {
         MyBufferedReader.printError(selectedBundle.getString("chooseLanguageError"));
       }
-    } catch (NotANumberException e) {
-      MyBufferedReader.printError(selectedBundle.getString(notANumberException));
+    } catch (NotaNumberException e) {
+      MyBufferedReader.printError(selectedBundle.getString(notaNumberException));
     } catch (NumberOutOfRangeException e) {
-      MyBufferedReader.printError(selectedBundle.getString("numberOutOfRangeException"));
+      MyBufferedReader.printError(selectedBundle.getString(numberOutOfRangeException));
     }
   }
 
+  //</editor-fold>
 }
-//</editor-fold>

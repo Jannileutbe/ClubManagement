@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jle.consoleinoutput.inputoutput.ConsoleColors;
-import jle.exceptions.NotANumberException;
+import jle.exceptions.NotaNumberException;
 import jle.exceptions.NumberOutOfRangeException;
 
 public class MyBufferedReader {
@@ -23,10 +23,6 @@ public class MyBufferedReader {
   private static final Logger LOGGER = Logger.getLogger(MyBufferedReader.class.getName());
 
   private static final BufferedReader BUFFERED_READER = new BufferedReader(new InputStreamReader(System.in));
-
-  private static final String phonenumberPattern = "\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}";
-
-  private static final String WRONGPHONENUMBERFORMAT = "Phone number doesn't match required format!";
 
   static {
     try {
@@ -42,7 +38,7 @@ public class MyBufferedReader {
   }
 
   public static void print(String output) {
-    System.out.println(output);
+    System.out.print(output);
     //LOGGER.config(output);
   }
 
@@ -62,11 +58,11 @@ public class MyBufferedReader {
   }
 
   public static void printError(String output) {
-    System.out.println(ConsoleColors.RED + output + ConsoleColors.RESET);
+    System.out.println(ConsoleColors.RED + output + ConsoleColors.RESET + "\n");
     //LOGGER.info(output + NEWLINE);
   }
 
-  public static int readInInt(int maximum, String inputRules) throws NumberOutOfRangeException, NotANumberException {
+  public static int readInInt(int maximum, String inputRules) throws NumberOutOfRangeException, NotaNumberException {
     String userInput = checkUserInput(inputRules);
     boolean richtigeEingabe = false;
     while (!richtigeEingabe) {
@@ -75,7 +71,7 @@ public class MyBufferedReader {
         if (asciiValue > ASCIIZERO && asciiValue < ASCIININE) {
           richtigeEingabe = true;
         } else {
-          throw new NotANumberException();
+          throw new NotaNumberException();
         }
       }
       if (richtigeEingabe) {
@@ -88,7 +84,7 @@ public class MyBufferedReader {
     return Integer.parseInt(userInput);
   }
 
-  public static int readInInt(String inputRules) throws NotANumberException {
+  public static int readInInt(String inputRules) throws NotaNumberException {
     String userInput = checkUserInput(inputRules);
     if (isNumber(userInput)) {
       return Integer.parseInt(userInput);
@@ -96,7 +92,7 @@ public class MyBufferedReader {
     return -1;
   }
 
-  public static int readInInt() throws NotANumberException {
+  public static int readInInt() throws NotaNumberException {
     String userInput = checkUserInput("");
     if (isNumber(userInput)) {
       return Integer.parseInt(userInput);
@@ -104,7 +100,7 @@ public class MyBufferedReader {
     return -1;
   }
 
-  public static int readInInt(int maximum) throws NotANumberException, NumberOutOfRangeException {
+  public static int readInInt(int maximum) throws NotaNumberException, NumberOutOfRangeException {
     String userInput = checkUserInput("");
     boolean richtigeEingabe = isNumber(userInput);
     if (richtigeEingabe) {
@@ -123,7 +119,7 @@ public class MyBufferedReader {
       try {
         eingabe = MyBufferedReader.readInInt();
         ok = true;
-      } catch (NotANumberException e) {
+      } catch (NotaNumberException e) {
         MyBufferedReader.printError("Die eingabe war keine Zahl!");
       }
     }
@@ -146,7 +142,7 @@ public class MyBufferedReader {
     return userInput.charAt(0);
   }
 
-  private static boolean isNumber(String userInput) throws NotANumberException {
+  private static boolean isNumber(String userInput) throws NotaNumberException {
     boolean richtigeEingabe = false;
     while (!richtigeEingabe) {
       for (int i = 0; i < userInput.length(); i++) {
@@ -154,7 +150,7 @@ public class MyBufferedReader {
         if (asciiValue > ASCIIZERO && asciiValue < ASCIININE) {
           richtigeEingabe = true;
         } else {
-          throw new NotANumberException();
+          throw new NotaNumberException();
         }
       }
     }

@@ -1,20 +1,21 @@
-package jle.vereinsverwaltung.mitglied.ValueObjects.adresse;
+package jle.vereinsverwaltung.mitglied.valueobjects.adresse;
 
 import java.util.regex.Pattern;
+
 import jle.exceptions.InvalidCityException;
 
 public class Ort {
 
-  private String ort;
+  private final String ortString;
 
-  private final String REGEX = "[\\p{L}./ -]{1,50}";
+  private final String regex = "[\\p{L}./ -]{1,50}";
 
   public Ort(String city) {
-    this.ort = validateNormalizeCity(city);
+    this.ortString = validateNormalizeCity(city);
   }
 
   public String validateNormalizeCity(String city) {
-    if (Pattern.compile(REGEX).matcher(city).matches()) {
+    if (Pattern.compile(regex).matcher(city).matches()) {
       return city;
     } else {
       throw new InvalidCityException();
@@ -30,17 +31,17 @@ public class Ort {
   public boolean equals(Object obj) {
     if (obj instanceof Ort) {
       Ort ort = (Ort)obj;
-      return this.getOrt().equalsIgnoreCase(ort.getOrt());
+      return this.getOrtString().equalsIgnoreCase(ort.getOrtString());
     }
     return false;
   }
 
   @Override
   public String toString() {
-    return ort;
+    return ortString;
   }
 
-  public String getOrt() {
-    return ort;
+  public String getOrtString() {
+    return ortString;
   }
 }

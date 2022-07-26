@@ -12,7 +12,7 @@ public enum Vorstandsrollen {
 
     private final String bezeichnung;
 
-    Vorstandsrollen(String bezeichnung){
+    Vorstandsrollen(String bezeichnung) {
         this.bezeichnung = bezeichnung;
     }
 

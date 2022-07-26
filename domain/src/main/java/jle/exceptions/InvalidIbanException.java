@@ -1,5 +1,5 @@
 package jle.exceptions;
 
-public class InvalidIbanException extends IllegalArgumentException{
+public class InvalidIbanException extends IllegalArgumentException {
 
 }

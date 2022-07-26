@@ -1,7 +1,7 @@
 package jle.exceptions;
 
 public class ClubAlreadyExistsException extends Exception {
-    public ClubAlreadyExistsException(){
+    public ClubAlreadyExistsException() {
         super("This club already exists!");
     }
 }

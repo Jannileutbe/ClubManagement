@@ -2,20 +2,20 @@ package jle.vereinsverwaltung.verein;
 
 import java.util.LinkedList;
 
-import jle.importAndExport.CSVParser;
-import jle.vereinsverwaltung.mitglied.Mitglied;
+import jle.importexport.CsvParser;
 import jle.vereinsverwaltung.bankverbindung.Bankverbindung;
 import jle.vereinsverwaltung.bankverbindung.Iban;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Adresse;
-import jle.vereinsverwaltung.vorstand.Vorstandsrollen;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Geburtsdatum;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Mitgliedsnummer;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Nachname;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Telefonnummer;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Vorname;
+import jle.vereinsverwaltung.mitglied.Mitglied;
+import jle.vereinsverwaltung.mitglied.valueobjects.Adresse;
+import jle.vereinsverwaltung.mitglied.valueobjects.Geburtsdatum;
+import jle.vereinsverwaltung.mitglied.valueobjects.Mitgliedsnummer;
+import jle.vereinsverwaltung.mitglied.valueobjects.Nachname;
+import jle.vereinsverwaltung.mitglied.valueobjects.Telefonnummer;
+import jle.vereinsverwaltung.mitglied.valueobjects.Vorname;
 import jle.vereinsverwaltung.vorstand.Vorstand;
+import jle.vereinsverwaltung.vorstand.Vorstandsrollen;
 
-public class VereinsParser implements CSVParser {
+public class VereinsParser implements CsvParser {
 
   private final String clubNameMarker = "clubName:";
   private final String clubDescriptionMarker = "clubDescription:";
@@ -34,13 +34,11 @@ public class VereinsParser implements CSVParser {
 
   @Override
   public String parseToString(Verein verein) {
-    StringBuilder vereinStringBuilder = new StringBuilder();
-    vereinStringBuilder.append(appendClubName(verein));
-    vereinStringBuilder.append(appendClubDescription(verein));
-    vereinStringBuilder.append(appendClubBankDetails(verein));
-    vereinStringBuilder.append(appendClubExecutives(verein));
-    vereinStringBuilder.append(appendClubMembers(verein));
-    return vereinStringBuilder.toString();
+    return appendClubName(verein)
+        + appendClubDescription(verein)
+        + appendClubBankDetails(verein)
+        + appendClubExecutives(verein)
+        + appendClubMembers(verein);
   }
 
   private String appendClubName(Verein verein) {
@@ -161,7 +159,7 @@ public class VereinsParser implements CSVParser {
   }
 
   private LinkedList<Mitglied> parseclubStringToClubMemberList(String clubAsString) {
-    LinkedList<Mitglied> clubMembersList = new LinkedList<Mitglied>();
+    LinkedList<Mitglied> clubMembersList = new LinkedList<>();
     int clubMembersListStart = clubAsString.indexOf(this.clubMembersListMarker) + this.clubMembersListMarker.length() + 1;
     int clubMembersListEnd = clubAsString.length();
     String clubMembersListString = clubAsString.substring(clubMembersListStart, clubMembersListEnd);
@@ -243,7 +241,8 @@ public class VereinsParser implements CSVParser {
   private LinkedList<Telefonnummer> buildMemberPhonenumbers(String memberPhoneNumbersString) {
     LinkedList<Telefonnummer> memberPhoneNumbersList = new LinkedList<>();
     while (!memberPhoneNumbersString.equals("")) {
-      Telefonnummer phoneNumber = new Telefonnummer(memberPhoneNumbersString.substring(0, memberPhoneNumbersString.indexOf(commaSeparator)));
+      Telefonnummer phoneNumber = new Telefonnummer(memberPhoneNumbersString
+          .substring(0, memberPhoneNumbersString.indexOf(commaSeparator)));
       memberPhoneNumbersString = memberPhoneNumbersString.substring(memberPhoneNumbersString.indexOf(commaSeparator) + 1);
       memberPhoneNumbersList.add(phoneNumber);
     }

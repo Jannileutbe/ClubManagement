@@ -6,7 +6,7 @@ public class VorstandComparator implements Comparator<Vorstand> {
 
 
   @Override
-  public int compare(Vorstand o1, Vorstand o2) {
-    return Integer.compare(o1.getVorstandsrolle().ordinal(), o2.getVorstandsrolle().ordinal());
+  public int compare(Vorstand executiveOne, Vorstand executiveTwo) {
+    return Integer.compare(executiveOne.getVorstandsrolle().ordinal(), executiveTwo.getVorstandsrolle().ordinal());
   }
 }

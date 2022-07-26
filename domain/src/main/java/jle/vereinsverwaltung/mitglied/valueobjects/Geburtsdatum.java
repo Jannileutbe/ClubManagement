@@ -1,4 +1,4 @@
-package jle.vereinsverwaltung.mitglied.ValueObjects;
+package jle.vereinsverwaltung.mitglied.valueobjects;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,11 +8,11 @@ import jle.exceptions.InvalidBirthdayException;
 
 public class Geburtsdatum {
 
-  private String geburtsdatum;
-  private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+  private final String geburtsdatumString;
+  private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
-  public Geburtsdatum(String geburtsdatum) {
-    this.geburtsdatum = validateBirthday(geburtsdatum);
+  public Geburtsdatum(String geburtsdatumString) {
+    this.geburtsdatumString = validateBirthday(geburtsdatumString);
   }
 
   private String validateBirthday(String geburtstag) {
@@ -36,7 +36,7 @@ public class Geburtsdatum {
 
   @Override
   public int hashCode() {
-    return geburtsdatum.hashCode();
+    return geburtsdatumString.hashCode();
   }
 
   @Override
@@ -44,7 +44,7 @@ public class Geburtsdatum {
     boolean gleich = false;
     if (obj instanceof Geburtsdatum) {
       Geburtsdatum geburtsdatum = (Geburtsdatum)obj;
-      if (this.getGeburtsdatum().toLowerCase().equals(geburtsdatum.getGeburtsdatum().toLowerCase())) {
+      if (this.getGeburtsdatumString().equalsIgnoreCase(geburtsdatum.getGeburtsdatumString())) {
         gleich = true;
       }
     }
@@ -53,11 +53,11 @@ public class Geburtsdatum {
 
   @Override
   public String toString() {
-    return geburtsdatum;
+    return geburtsdatumString;
   }
 
-  public String getGeburtsdatum() {
-    return geburtsdatum;
+  public String getGeburtsdatumString() {
+    return geburtsdatumString;
   }
 
 }

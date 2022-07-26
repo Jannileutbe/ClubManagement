@@ -1,11 +1,11 @@
 jle.consoleinoutput.inputoutput
 jle.consoleinoutput.mybufferedreader
 jle.exceptions
-jle.importAndExport
+jle.importexport
 jle.vereinsverwaltung
 jle.vereinsverwaltung.bankverbindung
 jle.vereinsverwaltung.mitglied
-jle.vereinsverwaltung.mitglied.ValueObjects
+jle.vereinsverwaltung.mitglied.valueobjects
 jle.vereinsverwaltung.verein
-jle.vereinsverwaltung.vereineSortieren
+jle.vereinsverwaltung.vereinesortieren
 jle.vereinsverwaltung.vorstand

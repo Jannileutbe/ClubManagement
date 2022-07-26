@@ -4,7 +4,7 @@ import jle.vereinsverwaltung.mitglied.Mitglied;
 
 public class Vorstand {
     private Mitglied mitglied;
-    private Vorstandsrollen vorstandsrolle;
+    private final Vorstandsrollen vorstandsrolle;
 
     public Vorstand(Mitglied mitglied, Vorstandsrollen vorstandsrolle) {
         this.mitglied = mitglied;
@@ -21,10 +21,6 @@ public class Vorstand {
 
     public Vorstandsrollen getVorstandsrolle() {
         return vorstandsrolle;
-    }
-
-    public void setVorstandsrolle(Vorstandsrollen vorstandsrolle) {
-        this.vorstandsrolle = vorstandsrolle;
     }
 
     @Override

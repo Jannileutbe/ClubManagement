@@ -1,4 +1,4 @@
-package jle.vereinsverwaltung.mitglied.ValueObjects.adresse;
+package jle.vereinsverwaltung.mitglied.valueobjects.adresse;
 
 import java.util.regex.Pattern;
 
@@ -6,16 +6,16 @@ import jle.exceptions.InvalidPostalCodeException;
 
 public class Postleitzahl {
 
-  private String postleitzahl;
+  private final String postleitzahlString;
 
-  private final String REGEX = "[\\p{N}]{5}";
+  private final String regex = "[\\p{N}]{5}";
 
   public Postleitzahl(String postalCode) {
-    this.postleitzahl = validateNormalizePostalCode(postalCode);
+    this.postleitzahlString = validateNormalizePostalCode(postalCode);
   }
 
   private String validateNormalizePostalCode(String postalCode) {
-    if (Pattern.compile(REGEX).matcher(postalCode).matches()) {
+    if (Pattern.compile(regex).matcher(postalCode).matches()) {
       return postalCode;
     } else {
       throw new InvalidPostalCodeException();
@@ -31,17 +31,17 @@ public class Postleitzahl {
   public boolean equals(Object obj) {
     if (obj instanceof Postleitzahl) {
       Postleitzahl postleitzahl = (Postleitzahl)obj;
-      return this.getPostleitzahl().equalsIgnoreCase(postleitzahl.getPostleitzahl());
+      return this.getPostleitzahlString().equalsIgnoreCase(postleitzahl.getPostleitzahlString());
     }
     return false;
   }
 
   @Override
   public String toString() {
-    return postleitzahl;
+    return postleitzahlString;
   }
 
-  public String getPostleitzahl() {
-    return postleitzahl;
+  public String getPostleitzahlString() {
+    return postleitzahlString;
   }
 }

@@ -3,12 +3,12 @@ package jle.vereinsverwaltung.mitglied;
 import java.util.LinkedList;
 
 import jle.vereinsverwaltung.bankverbindung.Bankverbindung;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Adresse;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Geburtsdatum;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Mitgliedsnummer;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Nachname;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Telefonnummer;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Vorname;
+import jle.vereinsverwaltung.mitglied.valueobjects.Adresse;
+import jle.vereinsverwaltung.mitglied.valueobjects.Geburtsdatum;
+import jle.vereinsverwaltung.mitglied.valueobjects.Mitgliedsnummer;
+import jle.vereinsverwaltung.mitglied.valueobjects.Nachname;
+import jle.vereinsverwaltung.mitglied.valueobjects.Telefonnummer;
+import jle.vereinsverwaltung.mitglied.valueobjects.Vorname;
 import jle.vereinsverwaltung.verein.Verein;
 
 public class Mitglied implements Comparable<Mitglied> {
@@ -109,9 +109,9 @@ public class Mitglied implements Comparable<Mitglied> {
 
     @Override
     public int compareTo(Mitglied mitglied) {
-        if (this.getNachname().getNachname().compareTo(mitglied.getNachname().getNachname()) == 0) {
-            return this.getVorname().getVorname().compareTo(mitglied.getVorname().getVorname());
+        if (this.getNachname().getNachnameString().compareTo(mitglied.getNachname().getNachnameString()) == 0) {
+            return this.getVorname().getVornameString().compareTo(mitglied.getVorname().getVornameString());
         }
-        return this.getNachname().getNachname().compareTo(mitglied.getNachname().getNachname());
+        return this.getNachname().getNachnameString().compareTo(mitglied.getNachname().getNachnameString());
     }
 }

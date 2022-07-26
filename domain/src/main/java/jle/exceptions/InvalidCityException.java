@@ -1,5 +1,5 @@
 package jle.exceptions;
 
-public class InvalidCityException extends IllegalArgumentException{
+public class InvalidCityException extends IllegalArgumentException {
 
 }

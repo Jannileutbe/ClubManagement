@@ -2,37 +2,36 @@ package jle.vereinsverwaltung.verein;
 
 public class VereinsName {
 
-    private String vereinsName;
+  private final String vereinsNameString;
 
-    public VereinsName(String vereinsName) {
-        this.vereinsName = vereinsName;
+  public VereinsName(String vereinsNameString) {
+    this.vereinsNameString = vereinsNameString;
+  }
+
+  @Override
+  public int hashCode() {
+
+    return vereinsNameString.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    boolean gleich = false;
+    if (obj instanceof VereinsName) {
+      VereinsName vereinsName = (VereinsName)obj;
+      if (this.getVereinsNameString().equalsIgnoreCase(vereinsName.getVereinsNameString())) {
+        gleich = true;
+      }
     }
+    return gleich;
+  }
 
-    @Override
-    public int hashCode() {
+  @Override
+  public String toString() {
+    return vereinsNameString;
+  }
 
-        return vereinsName.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        boolean gleich = false;
-        if (obj instanceof VereinsName) {
-            VereinsName vereinsName = (VereinsName) obj;
-            String vereinsNameString = vereinsName.getVereinsName();
-            if (this.getVereinsName().toLowerCase().equals(vereinsNameString.toLowerCase())){
-                gleich = true;
-            }
-        }
-        return gleich;
-    }
-
-    @Override
-    public String toString() {
-        return vereinsName;
-    }
-
-    public String getVereinsName() {
-        return vereinsName;
-    }
+  public String getVereinsNameString() {
+    return vereinsNameString;
+  }
 }

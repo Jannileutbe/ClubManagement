@@ -1,7 +1,7 @@
 package jle.exceptions;
 
-public class NotANumberException extends Exception {
-    public NotANumberException(){
+public class NotaNumberException extends Exception {
+    public NotaNumberException() {
         super("The entered Character was not a number!");
     }
 }

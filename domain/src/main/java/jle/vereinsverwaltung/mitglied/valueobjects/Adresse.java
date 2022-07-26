@@ -1,15 +1,15 @@
-package jle.vereinsverwaltung.mitglied.ValueObjects;
+package jle.vereinsverwaltung.mitglied.valueobjects;
 
-import jle.vereinsverwaltung.mitglied.ValueObjects.adresse.Adresszeile;
-import jle.vereinsverwaltung.mitglied.ValueObjects.adresse.Ort;
-import jle.vereinsverwaltung.mitglied.ValueObjects.adresse.Postleitzahl;
+import jle.vereinsverwaltung.mitglied.valueobjects.adresse.Adresszeile;
+import jle.vereinsverwaltung.mitglied.valueobjects.adresse.Ort;
+import jle.vereinsverwaltung.mitglied.valueobjects.adresse.Postleitzahl;
 
 public class Adresse {
 
-  private Adresszeile adresszeileEins;
-  private Adresszeile adresszeileZwei;
-  private Postleitzahl postleitzahl;
-  private Ort ort;
+  private final Adresszeile adresszeileEins;
+  private final Adresszeile adresszeileZwei;
+  private final Postleitzahl postleitzahl;
+  private final Ort ort;
 
   public Adresse(Adresszeile adresszeileEins, Adresszeile adresszeileZwei, Postleitzahl postleitzahl, Ort ort) {
     this.adresszeileEins = adresszeileEins;
@@ -35,12 +35,18 @@ public class Adresse {
   }
 
   @Override
+  public int hashCode() {
+    return super.hashCode();
+  }
+
+  @Override
   public String toString() {
-    String returnString = this.getAdresszeileEins().toString() + ", ";
+    String comma = ", ";
+    String returnString = this.getAdresszeileEins().toString() + comma;
     if (!this.getAdresszeileZwei().getAdressezeile().equals("")) {
-      returnString += this.getAdresszeileZwei().toString() + ", ";
+      returnString += this.getAdresszeileZwei().toString() + comma;
     }
-    returnString += this.getPostleitzahl().toString() + ", ";
+    returnString += this.getPostleitzahl().toString() + comma;
     returnString += this.getOrt().toString();
     return returnString;
   }

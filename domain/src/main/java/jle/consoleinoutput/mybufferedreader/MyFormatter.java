@@ -6,8 +6,7 @@ import java.util.logging.LogRecord;
 public class MyFormatter extends Formatter {
 
   public String format(LogRecord rec) {
-    String ausgabe = rec.getMessage();
-    return ausgabe;
+    return rec.getMessage();
   }
 
   @Override

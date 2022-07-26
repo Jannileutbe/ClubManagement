@@ -1,5 +1,5 @@
 package jle.exceptions;
 
-public class InvalidMemberNumberException extends IllegalArgumentException{
+public class InvalidMemberNumberException extends IllegalArgumentException {
 
 }

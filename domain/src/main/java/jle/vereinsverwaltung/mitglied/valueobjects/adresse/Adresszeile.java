@@ -1,4 +1,4 @@
-package jle.vereinsverwaltung.mitglied.ValueObjects.adresse;
+package jle.vereinsverwaltung.mitglied.valueobjects.adresse;
 
 import java.util.regex.Pattern;
 
@@ -6,9 +6,9 @@ import jle.exceptions.InvalidAddressLineException;
 
 public class Adresszeile {
 
-  private String adressezeile;
+  private final String adressezeile;
 
-  private final String REGEX = "[\\p{L}\\p{N}./ -]{1,80}";
+  private final String regex = "[\\p{L}\\p{N}./ -]{1,80}";
 
   public Adresszeile(String adressezeile, boolean isOptional) {
     if (isOptional) {
@@ -19,7 +19,7 @@ public class Adresszeile {
   }
 
   private String validateNormalizeAddressLine(String addressLine) {
-    if (Pattern.compile(REGEX).matcher(addressLine).matches()) {
+    if (Pattern.compile(regex).matcher(addressLine).matches()) {
       return addressLine;
     } else {
       throw new InvalidAddressLineException();
@@ -30,7 +30,7 @@ public class Adresszeile {
     if (addressLine.equals("")) {
       return "";
     } else {
-      if (Pattern.compile(REGEX).matcher(addressLine).matches()) {
+      if (Pattern.compile(regex).matcher(addressLine).matches()) {
         return addressLine;
       } else {
         throw new InvalidAddressLineException();

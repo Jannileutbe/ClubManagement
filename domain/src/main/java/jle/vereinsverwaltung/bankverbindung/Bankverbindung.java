@@ -6,8 +6,8 @@ public class Bankverbindung {
     private Mitglied kontoinhaber;
     private Iban iban;
 
-    public Bankverbindung(Mitglied kontoinhaber, Iban iban){
-        this.kontoinhaber= kontoinhaber;
+    public Bankverbindung(Mitglied kontoinhaber, Iban iban) {
+        this.kontoinhaber = kontoinhaber;
         this.iban = iban;
     }
 

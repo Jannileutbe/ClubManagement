@@ -1,4 +1,4 @@
-package jle.vereinsverwaltung.mitglied.ValueObjects;
+package jle.vereinsverwaltung.mitglied.valueobjects;
 
 import java.util.regex.Pattern;
 
@@ -6,16 +6,16 @@ import jle.exceptions.InvalidPhonenumberException;
 
 public class Telefonnummer {
 
-  private String telefonnummer;
+  private final String telefonnummerString;
 
-  private final String REGEX = "[\\d()./ -]{3,15}";
+  private final String regex = "[\\d()./ -]{3,15}";
 
-  public Telefonnummer(String telefonnummer) {
-    this.telefonnummer = validateNormalizePhoneNumber(telefonnummer);
+  public Telefonnummer(String telefonnummerString) {
+    this.telefonnummerString = validateNormalizePhoneNumber(telefonnummerString);
   }
 
   private String validateNormalizePhoneNumber(String phonenumber) {
-    if (Pattern.compile(REGEX).matcher(phonenumber).matches()) {
+    if (Pattern.compile(regex).matcher(phonenumber).matches()) {
       return phonenumber.replaceAll("[^0-9]", "");
     } else {
       throw new InvalidPhonenumberException();
@@ -24,7 +24,7 @@ public class Telefonnummer {
 
   @Override
   public int hashCode() {
-    return telefonnummer.hashCode();
+    return telefonnummerString.hashCode();
   }
 
   @Override
@@ -32,7 +32,7 @@ public class Telefonnummer {
     boolean gleich = false;
     if (obj instanceof Telefonnummer) {
       Telefonnummer telefonnummer = (Telefonnummer)obj;
-      if (this.getTelefonnummer().equalsIgnoreCase(telefonnummer.getTelefonnummer())) {
+      if (this.getTelefonnummerString().equalsIgnoreCase(telefonnummer.getTelefonnummerString())) {
         gleich = true;
       }
     }
@@ -41,11 +41,11 @@ public class Telefonnummer {
 
   @Override
   public String toString() {
-    return telefonnummer;
+    return telefonnummerString;
   }
 
-  public String getTelefonnummer() {
-    return telefonnummer;
+  public String getTelefonnummerString() {
+    return telefonnummerString;
   }
 
 }

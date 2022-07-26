@@ -5,10 +5,10 @@ import org.apache.commons.validator.routines.checkdigit.IBANCheckDigit;
 import jle.exceptions.InvalidIbanException;
 
 public class Iban {
-    private String iban;
+    private final String ibanString;
 
-    public Iban(String iban) {
-        this.iban = validateIban(iban);
+    public Iban(String ibanString) {
+        this.ibanString = validateIban(ibanString);
     }
 
     private String validateIban(String iban) {
@@ -35,15 +35,15 @@ public class Iban {
 
     @Override
     public int hashCode() {
-        return iban.hashCode();
+        return ibanString.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
         boolean gleich = false;
         if (obj instanceof Iban) {
-            Iban iban = (Iban) obj;
-            if (this.getIban().trim().equalsIgnoreCase(iban.getIban().trim())) {
+            Iban iban = (Iban)obj;
+            if (this.getIbanString().trim().equalsIgnoreCase(iban.getIbanString().trim())) {
                 gleich = true;
             }
         }
@@ -52,10 +52,10 @@ public class Iban {
 
     @Override
     public String toString() {
-        return iban;
+        return ibanString;
     }
 
-    public String getIban() {
-        return iban;
+    public String getIbanString() {
+        return ibanString;
     }
 }

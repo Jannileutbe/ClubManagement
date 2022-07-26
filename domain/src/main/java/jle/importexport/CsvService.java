@@ -1,4 +1,4 @@
-package jle.importAndExport;
+package jle.importexport;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -10,20 +10,22 @@ import java.util.LinkedList;
 import jle.vereinsverwaltung.verein.Verein;
 import jle.vereinsverwaltung.verein.VereinsParser;
 
-public class CSVService {
+public class CsvService {
 
-  private LinkedList<Verein> vereinsListe;
-  private String directoryPath;
-  private String fileName;
+  private final LinkedList<Verein> vereinsListe;
+  private final String directoryPath;
+  private final String fileName;
 
-  public CSVService(LinkedList<Verein> vereinsListe, String directoryPath, String fileName) {
+  private final String slash = "/";
+
+  public CsvService(LinkedList<Verein> vereinsListe, String directoryPath, String fileName) {
     this.vereinsListe = vereinsListe;
     this.directoryPath = directoryPath;
     this.fileName = fileName;
   }
 
-  public void exportClubListToCSV(CSVParser parser) throws IOException {
-    OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(this.directoryPath + "/" + fileName));
+  public void exportClubListToCsv(CsvParser parser) throws IOException {
+    OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(this.directoryPath + slash + fileName));
     StringBuilder clubListBuilder = new StringBuilder();
     Iterator<Verein> clubListIterator = this.vereinsListe.iterator();
     while (clubListIterator.hasNext()) {
@@ -37,7 +39,7 @@ public class CSVService {
   }
 
   public LinkedList<Verein> importClubToSystem() throws IOException {
-    FileInputStream fis = new FileInputStream(this.directoryPath + "/" + this.fileName);
+    FileInputStream fis = new FileInputStream(this.directoryPath + slash + this.fileName);
     StringBuilder clubListBuilder = new StringBuilder();
     VereinsParser vereinsParser = new VereinsParser();
     int ch;

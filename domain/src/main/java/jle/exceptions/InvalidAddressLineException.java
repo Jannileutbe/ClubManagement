@@ -1,5 +1,5 @@
 package jle.exceptions;
 
-public class InvalidAddressLineException extends IllegalArgumentException{
+public class InvalidAddressLineException extends IllegalArgumentException {
 
 }

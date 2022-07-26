@@ -3,66 +3,46 @@ package jle.vereinsverwaltung.verein;
 import java.util.LinkedList;
 
 import jle.consoleinoutput.mybufferedreader.MyBufferedReader;
-import jle.vereinsverwaltung.mitglied.Mitglied;
-import jle.vereinsverwaltung.vorstand.VorstandComparator;
 import jle.vereinsverwaltung.bankverbindung.Bankverbindung;
-import jle.vereinsverwaltung.mitglied.ValueObjects.Mitgliedsnummer;
+import jle.vereinsverwaltung.mitglied.Mitglied;
+import jle.vereinsverwaltung.mitglied.valueobjects.Mitgliedsnummer;
 import jle.vereinsverwaltung.vorstand.Vorstand;
+import jle.vereinsverwaltung.vorstand.VorstandComparator;
 
 public class Verein implements Comparable<Verein> {
+
   private VereinsName name;
   private VereinsBeschreibung beschreibung;
-  private LinkedList<Bankverbindung> bankverbindungen;
-  private LinkedList<Mitglied> mitgliederliste;
-  private LinkedList<Vorstand> vorstandsrollen;
-
-/* Vorstandrollenausgeben evtl.
-  String kommissarischeRolle = "";
-        if (this.getKommissarischeVorstandsrolle() != null) {
-            kommissarischeRolle = this.getKommissarischeVorstandsrolle().getBezeichnung();
-        }
-        if (this.getVorstandsrolle() != null && this.getKommissarischeVorstandsrolle() != null) {
-            System.out.print(BLUE + "| Vorstandrolle: " + vorstandsrolle + RESET + " | ");
-            System.out.println(YELLOW + kommissarischeRolle + " |" + RESET);
-        } else if (this.getVorstandsrolle() != null && this.getKommissarischeVorstandsrolle() == null) {
-            System.out.println(BLUE + "| Vorstandrolle: " + vorstandsrolle + " |" + RESET);
-        } else if (this.getVorstandsrolle() == null && this.getKommissarischeVorstandsrolle() != null) {
-            System.out.println(YELLOW + "| " + kommissarischeRolle + " |" + RESET);
-        }
-  */
+  private final LinkedList<Bankverbindung> bankverbindungen;
+  private final LinkedList<Mitglied> mitgliederliste;
+  private final LinkedList<Vorstand> vorstandsrollen;
 
   public Verein(VereinsName name, VereinsBeschreibung beschreibung) {
     this.name = name;
     this.beschreibung = beschreibung;
-    this.bankverbindungen = new LinkedList<Bankverbindung>();
-    this.mitgliederliste = new LinkedList<Mitglied>();
-    this.vorstandsrollen = new LinkedList<Vorstand>();
+    this.bankverbindungen = new LinkedList<>();
+    this.mitgliederliste = new LinkedList<>();
+    this.vorstandsrollen = new LinkedList<>();
   }
 
   public Verein(VereinsName name, VereinsBeschreibung beschreibung, LinkedList<Mitglied> mitgliederliste) {
     this.name = name;
     this.beschreibung = beschreibung;
     this.mitgliederliste = mitgliederliste;
-    this.bankverbindungen = new LinkedList<Bankverbindung>();
-    this.vorstandsrollen = new LinkedList<Vorstand>();
+    this.bankverbindungen = new LinkedList<>();
+    this.vorstandsrollen = new LinkedList<>();
   }
 
   public void addMitglied(Mitglied neuesMitglied) {
-    boolean ok = false;
-    while (!ok) {
       Mitgliedsnummer neuesMitgliedMitgliedsnummer = neuesMitglied.getMitgliedsnummer();
       if (!mitgliederliste.isEmpty()) {
         for (Mitglied mitglied : mitgliederliste) {
           if (mitglied.getMitgliedsnummer().equals(neuesMitgliedMitgliedsnummer)) {
             MyBufferedReader.printError("Diese Mitgliedsnummer ist bereits vergeben!");
             break;
-          } else {
-            ok = true;
           }
         }
       }
-      ok = true;
-    }
     mitgliederliste.add(neuesMitglied);
   }
 
@@ -97,13 +77,14 @@ public class Verein implements Comparable<Verein> {
 
   @Override
   public String toString() {
-    return "| Vereinsname: " + name + " | "
-        + "Vereinsbeschreibung: " + beschreibung + " | "
+    String separator = " | ";
+    return "| Vereinsname: " + name + separator
+        + "Vereinsbeschreibung: " + beschreibung + separator
         + "Mitgliederanzahl: " + mitgliederliste.size() + " |";
   }
 
   @Override
   public int compareTo(Verein verein) {
-    return this.getName().getVereinsName().compareTo(verein.getName().getVereinsName());
+    return this.getName().getVereinsNameString().compareTo(verein.getName().getVereinsNameString());
   }
 }
