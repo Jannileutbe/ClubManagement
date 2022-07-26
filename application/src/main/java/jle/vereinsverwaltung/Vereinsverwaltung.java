@@ -13,6 +13,8 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import consoleinoutput.exceptions.NotaNumberException;
+import consoleinoutput.exceptions.NumberOutOfRangeException;
 import consoleinoutput.mybufferedreader.MyBufferedReader;
 import jle.exceptions.AddressAlreadyExistsException;
 import jle.exceptions.ClubAlreadyExistsException;
@@ -22,8 +24,6 @@ import jle.exceptions.InvalidCityException;
 import jle.exceptions.InvalidIbanException;
 import jle.exceptions.InvalidPhonenumberException;
 import jle.exceptions.InvalidPostalCodeException;
-import consoleinoutput.exceptions.NotaNumberException;
-import consoleinoutput.exceptions.NumberOutOfRangeException;
 import jle.exceptions.PhoneNumberAlreadyExistsExeption;
 import jle.importexport.CsvService;
 import jle.vereinsverwaltung.bankverbindung.Bankverbindung;
@@ -118,13 +118,15 @@ public class Vereinsverwaltung {
   }
 
   public void vereinsListeBearbeiten() throws ClubAlreadyExistsException {
+    System.out.println("Hello World!");
     MyBufferedReader.println(selectedBundle.getString("addOrEditClubOptions"));
     int eingabe = MyBufferedReader.forceReadInInt();
     String noClubExistsException = "noClubExistsException";
     switch (eingabe) {
       case 1:
-        Verein neuerVerein = vereinsService.createVerein(
-            selectedBundle.getString("clubNameRules"), selectedBundle.getString("clubDescriptionRules"));
+        VereinsName name = new VereinsName(MyBufferedReader.readInString(selectedBundle.getString("clubNameRules")));
+        VereinsBeschreibung beschreibung = new VereinsBeschreibung(MyBufferedReader.readInString(selectedBundle.getString("clubDescriptionRules")));
+        Verein neuerVerein = vereinsService.createVerein(name, beschreibung);
         if (thisClubAlreadyExists(neuerVerein)) {
           throw new ClubAlreadyExistsException();
         } else {

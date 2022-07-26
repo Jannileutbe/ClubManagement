@@ -2,7 +2,6 @@ package jle.vereinsverwaltung.verein;
 
 import java.util.LinkedList;
 
-import consoleinoutput.mybufferedreader.MyBufferedReader;
 import jle.vereinsverwaltung.bankverbindung.Bankverbindung;
 import jle.vereinsverwaltung.mitglied.Mitglied;
 import jle.vereinsverwaltung.mitglied.valueobjects.Mitgliedsnummer;
@@ -38,8 +37,8 @@ public class Verein implements Comparable<Verein> {
       if (!mitgliederliste.isEmpty()) {
         for (Mitglied mitglied : mitgliederliste) {
           if (mitglied.getMitgliedsnummer().equals(neuesMitgliedMitgliedsnummer)) {
-            MyBufferedReader.printError("Diese Mitgliedsnummer ist bereits vergeben!");
-            break;
+            //TODO Number already exists exception
+            throw new IllegalArgumentException();
           }
         }
       }

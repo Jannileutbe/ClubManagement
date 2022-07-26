@@ -2,7 +2,6 @@ package jle.vereinsverwaltung;
 
 import consoleinoutput.mybufferedreader.MyBufferedReader;
 import jle.exceptions.ClubAlreadyExistsException;
-import jle.vereinsverwaltung.verein.ClubTestDataCreator;
 
 public class Start {
 

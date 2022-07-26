@@ -1,9 +1,8 @@
-package jle.vereinsverwaltung.verein;
+package jle.vereinsverwaltung;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import jle.vereinsverwaltung.Vereinsverwaltung;
 import jle.vereinsverwaltung.mitglied.Mitglied;
 import jle.vereinsverwaltung.mitglied.valueobjects.Adresse;
 import jle.vereinsverwaltung.mitglied.valueobjects.Geburtsdatum;
@@ -14,6 +13,9 @@ import jle.vereinsverwaltung.mitglied.valueobjects.Vorname;
 import jle.vereinsverwaltung.mitglied.valueobjects.adresse.Adresszeile;
 import jle.vereinsverwaltung.mitglied.valueobjects.adresse.Ort;
 import jle.vereinsverwaltung.mitglied.valueobjects.adresse.Postleitzahl;
+import jle.vereinsverwaltung.verein.Verein;
+import jle.vereinsverwaltung.verein.VereinsBeschreibung;
+import jle.vereinsverwaltung.verein.VereinsName;
 import jle.vereinsverwaltung.vorstand.Vorstand;
 import jle.vereinsverwaltung.vorstand.Vorstandsrollen;
 
