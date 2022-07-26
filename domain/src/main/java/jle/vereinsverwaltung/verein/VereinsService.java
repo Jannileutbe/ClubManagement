@@ -1,6 +1,6 @@
 package jle.vereinsverwaltung.verein;
 
-import jle.consoleinoutput.mybufferedreader.MyBufferedReader;
+import consoleinoutput.mybufferedreader.MyBufferedReader;
 
 public class VereinsService {
 

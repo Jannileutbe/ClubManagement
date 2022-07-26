@@ -2,7 +2,7 @@ package jle.vereinsverwaltung.verein;
 
 import java.util.LinkedList;
 
-import jle.consoleinoutput.mybufferedreader.MyBufferedReader;
+import consoleinoutput.mybufferedreader.MyBufferedReader;
 import jle.vereinsverwaltung.bankverbindung.Bankverbindung;
 import jle.vereinsverwaltung.mitglied.Mitglied;
 import jle.vereinsverwaltung.mitglied.valueobjects.Mitgliedsnummer;

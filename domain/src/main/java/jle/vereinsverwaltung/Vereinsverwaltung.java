@@ -1,9 +1,9 @@
 package jle.vereinsverwaltung;
 
-import static jle.consoleinoutput.inputoutput.ConsoleColors.BLUE;
-import static jle.consoleinoutput.inputoutput.ConsoleColors.RED;
-import static jle.consoleinoutput.inputoutput.ConsoleColors.RESET;
-import static jle.consoleinoutput.inputoutput.ConsoleColors.YELLOW;
+import static consoleinoutput.inputoutput.ConsoleColors.BLUE;
+import static consoleinoutput.inputoutput.ConsoleColors.RED;
+import static consoleinoutput.inputoutput.ConsoleColors.RESET;
+import static consoleinoutput.inputoutput.ConsoleColors.YELLOW;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import jle.consoleinoutput.mybufferedreader.MyBufferedReader;
+import consoleinoutput.mybufferedreader.MyBufferedReader;
 import jle.exceptions.AddressAlreadyExistsException;
 import jle.exceptions.ClubAlreadyExistsException;
 import jle.exceptions.InvalidAddressLineException;
@@ -22,8 +22,8 @@ import jle.exceptions.InvalidCityException;
 import jle.exceptions.InvalidIbanException;
 import jle.exceptions.InvalidPhonenumberException;
 import jle.exceptions.InvalidPostalCodeException;
-import jle.exceptions.NotaNumberException;
-import jle.exceptions.NumberOutOfRangeException;
+import consoleinoutput.exceptions.NotaNumberException;
+import consoleinoutput.exceptions.NumberOutOfRangeException;
 import jle.exceptions.PhoneNumberAlreadyExistsExeption;
 import jle.importexport.CsvService;
 import jle.vereinsverwaltung.bankverbindung.Bankverbindung;
@@ -81,7 +81,7 @@ public class Vereinsverwaltung {
   private final String letterv = "v";
   private final String fileNotFoundException = "fileNotFoundException";
   private final String ioException = "ioException";
-  private final String exportImportFile = "./resources/clubManagement";
+  private final String exportImportFile = "domain/target/csvExport";
 
   //</editor-fold>
 
@@ -1060,12 +1060,16 @@ public class Vereinsverwaltung {
   }
 
   private void vereineExportieren() {
-    String exportDirectoryString = MyBufferedReader.readInString(selectedBundle.getString("enterExportDirectoryPath"));
-    String exportFileNameString = MyBufferedReader.readInString(selectedBundle.getString("enterExportFileName"));
+    //TODO Export anpassen an neue Klassen
+    //String exportDirectoryString = MyBufferedReader.readInString(selectedBundle.getString("enterExportDirectoryPath"));
+    //String exportFileNameString = MyBufferedReader.readInString(selectedBundle.getString("enterExportFileName"));
     //File exportDirectory = new File(exportDirectoryString);
 
     File exportDirectory = new File(exportImportFile);
     String exportFileName = "clubManagementExport";
+
+    MyBufferedReader.println(exportDirectory.getAbsolutePath());
+
     CsvService exportCsvService = new CsvService(this.vereinsListe, exportDirectory.getPath(), exportFileName + ".csv");
     try {
       exportCsvService.exportClubListToCsv(new VereinsParser());
@@ -1078,8 +1082,9 @@ public class Vereinsverwaltung {
   }
 
   private void vereinslisteImportieren() {
-    String importDirectoryString = MyBufferedReader.readInString(selectedBundle.getString("enterImportDirectoryPath"));
-    String exportFileNameString = MyBufferedReader.readInString(selectedBundle.getString("enterImportFileName"));
+    //TODO Import reparieren
+    //String importDirectoryString = MyBufferedReader.readInString(selectedBundle.getString("enterImportDirectoryPath"));
+    //String exportFileNameString = MyBufferedReader.readInString(selectedBundle.getString("enterImportFileName"));
     //File importDirectory = new File(importDirectoryString);
 
     File importDirectory = new File(exportImportFile);

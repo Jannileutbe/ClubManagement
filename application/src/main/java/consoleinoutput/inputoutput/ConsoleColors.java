@@ -1,4 +1,4 @@
-package jle.consoleinoutput.inputoutput;
+package consoleinoutput.inputoutput;
 
 public class ConsoleColors {
     // Reset

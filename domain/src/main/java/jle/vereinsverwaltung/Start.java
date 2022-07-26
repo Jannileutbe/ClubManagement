@@ -1,12 +1,12 @@
 package jle.vereinsverwaltung;
 
-import jle.consoleinoutput.mybufferedreader.MyBufferedReader;
+import consoleinoutput.mybufferedreader.MyBufferedReader;
 import jle.exceptions.ClubAlreadyExistsException;
 import jle.vereinsverwaltung.verein.ClubTestDataCreator;
 
 public class Start {
 
-  private static final int STARTVARIABLE = 1;
+  private static final int STARTVARIABLE = 0;
 
   public static void main(String[] args) {
     Vereinsverwaltung vereinsverwaltung = new Vereinsverwaltung();

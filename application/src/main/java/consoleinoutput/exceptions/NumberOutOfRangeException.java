@@ -1,4 +1,4 @@
-package jle.exceptions;
+package consoleinoutput.exceptions;
 
 public class NumberOutOfRangeException extends Exception {
     public NumberOutOfRangeException() {

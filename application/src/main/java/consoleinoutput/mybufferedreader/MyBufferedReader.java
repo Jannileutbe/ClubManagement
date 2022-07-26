@@ -1,4 +1,4 @@
-package jle.consoleinoutput.mybufferedreader;
+package consoleinoutput.mybufferedreader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,9 +8,9 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jle.consoleinoutput.inputoutput.ConsoleColors;
-import jle.exceptions.NotaNumberException;
-import jle.exceptions.NumberOutOfRangeException;
+import consoleinoutput.exceptions.NotaNumberException;
+import consoleinoutput.exceptions.NumberOutOfRangeException;
+import consoleinoutput.inputoutput.ConsoleColors;
 
 public class MyBufferedReader {
 

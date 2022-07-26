@@ -1,4 +1,4 @@
-package jle.consoleinoutput.mybufferedreader;
+package consoleinoutput.mybufferedreader;
 
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
