@@ -31,7 +31,8 @@ public class Adresse {
       return false;
     }
     Adresse checkAdresse = (Adresse)obj;
-    return this.getAdresszeileEins().equals(checkAdresse.getAdresszeileEins()) && this.getPostleitzahl().equals(checkAdresse.getPostleitzahl());
+    return this.getAdresszeileEins().equals(checkAdresse.getAdresszeileEins())
+        && this.getPostleitzahl().equals(checkAdresse.getPostleitzahl());
   }
 
   @Override

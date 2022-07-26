@@ -5,6 +5,14 @@
     "https://checkstyle.org/dtds/suppressions_1_0.dtd">
 
 <suppressions>
-  <suppress checks="sysout"
+  <suppress checks=".*"
             files="MyBufferedReader.java"/>
+  <suppress checks=".*"
+            files="ClubTestDataCreator.java"/>
+  <suppress checks=".*"
+            files="Start.java"/>
+  <suppress checks=".*"
+            files="Messages_de.properties"/>
+  <suppress checks=".*"
+            files="Messages_en.properties"/>
 </suppressions>
