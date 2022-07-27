@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~
+  ~ C:/Users/Jannick Leutbecher/IdeaProjects/ClubManagement/domain/pom.xml
+  ~
+  ~
+  ~ This document contains trade secret data which is the property of
+  ~ OpenKnowledge GmbH. Information contained herein may not be used,
+  ~ copied or disclosed in whole or part except as permitted by written
+  ~ agreement from open knowledge GmbH.
+  ~
+  ~ Copyright (C) {YEAR} open knowledge GmbH / Oldenburg / Germany
+  ~
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">

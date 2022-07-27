@@ -1,3 +1,17 @@
+/*
+ *
+ * jle.vereinsverwaltung.ClubTestDataCreator
+ *
+ *
+ * This document contains trade secret data which is the property of
+ * OpenKnowledge GmbH. Information contained herein may not be used,
+ * copied or disclosed in whole or part except as permitted by written
+ * agreement from open knowledge GmbH.
+ *
+ * Copyright (C) {YEAR} open knowledge GmbH / Oldenburg / Germany
+ *
+ */
+
 package jle.vereinsverwaltung;
 
 import java.util.Arrays;
@@ -35,7 +49,7 @@ public class ClubTestDataCreator {
     otb.getMitgliederliste().add(new Mitglied(
         new Mitgliedsnummer("000000000002"),
         new Vorname("Jonas"),
-        new Nachname("Obermann"),
+        new Nachname("Slayer"),
         new Geburtsdatum("30-06-1996"),
         new LinkedList<Adresse>(Arrays.asList(new Adresse(new Adresszeile("Irgendwo 2", false),
             new Adresszeile("", true), new Postleitzahl("26122"), new Ort("Oldenburg")))),

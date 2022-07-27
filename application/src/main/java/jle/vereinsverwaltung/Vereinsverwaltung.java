@@ -1,3 +1,17 @@
+/*
+ *
+ * jle.vereinsverwaltung.Vereinsverwaltung
+ *
+ *
+ * This document contains trade secret data which is the property of
+ * OpenKnowledge GmbH. Information contained herein may not be used,
+ * copied or disclosed in whole or part except as permitted by written
+ * agreement from open knowledge GmbH.
+ *
+ * Copyright (C) {YEAR} open knowledge GmbH / Oldenburg / Germany
+ *
+ */
+
 package jle.vereinsverwaltung;
 
 import static consoleinoutput.inputoutput.ConsoleColors.BLUE;
@@ -118,14 +132,14 @@ public class Vereinsverwaltung {
   }
 
   public void vereinsListeBearbeiten() throws ClubAlreadyExistsException {
-    System.out.println("Hello World!");
     MyBufferedReader.println(selectedBundle.getString("addOrEditClubOptions"));
     int eingabe = MyBufferedReader.forceReadInInt();
     String noClubExistsException = "noClubExistsException";
     switch (eingabe) {
       case 1:
         VereinsName name = new VereinsName(MyBufferedReader.readInString(selectedBundle.getString("clubNameRules")));
-        VereinsBeschreibung beschreibung = new VereinsBeschreibung(MyBufferedReader.readInString(selectedBundle.getString("clubDescriptionRules")));
+        VereinsBeschreibung beschreibung = new VereinsBeschreibung(MyBufferedReader.readInString(
+            selectedBundle.getString("clubDescriptionRules")));
         Verein neuerVerein = vereinsService.createVerein(name, beschreibung);
         if (thisClubAlreadyExists(neuerVerein)) {
           throw new ClubAlreadyExistsException();

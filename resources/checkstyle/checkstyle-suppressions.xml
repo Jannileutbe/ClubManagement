@@ -1,5 +1,19 @@
 <?xml version="1.0"?>
 
+<!--
+  ~
+  ~ C:/Users/Jannick Leutbecher/IdeaProjects/ClubManagement/resources/checkstyle/checkstyle-suppressions.xml
+  ~
+  ~
+  ~ This document contains trade secret data which is the property of
+  ~ OpenKnowledge GmbH. Information contained herein may not be used,
+  ~ copied or disclosed in whole or part except as permitted by written
+  ~ agreement from open knowledge GmbH.
+  ~
+  ~ Copyright (C) {YEAR} open knowledge GmbH / Oldenburg / Germany
+  ~
+  -->
+
 <!DOCTYPE suppressions PUBLIC
     "-//Checkstyle//DTD SuppressionFilter Configuration 1.0//EN"
     "https://checkstyle.org/dtds/suppressions_1_0.dtd">

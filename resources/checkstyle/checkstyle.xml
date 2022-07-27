@@ -1,4 +1,18 @@
 <?xml version="1.0"?>
+<!--
+  ~
+  ~ C:/Users/Jannick Leutbecher/IdeaProjects/ClubManagement/resources/checkstyle/checkstyle.xml
+  ~
+  ~
+  ~ This document contains trade secret data which is the property of
+  ~ OpenKnowledge GmbH. Information contained herein may not be used,
+  ~ copied or disclosed in whole or part except as permitted by written
+  ~ agreement from open knowledge GmbH.
+  ~
+  ~ Copyright (C) {YEAR} open knowledge GmbH / Oldenburg / Germany
+  ~
+  -->
+
 <!DOCTYPE module PUBLIC
     "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
     "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
